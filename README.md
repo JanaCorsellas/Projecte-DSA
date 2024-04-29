@@ -1,1 +1,2 @@
-# rest-example
+primera versió backend
+web login i registre
