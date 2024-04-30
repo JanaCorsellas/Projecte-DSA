@@ -32,11 +32,13 @@
             font-size: 16px;
             cursor: pointer;
             border: none;
-            border-radius: 5px;
+            border-radius: 15px;
             background-color: MediumSeaGreen;
             color: #fff;
             text-decoration: none;
             transition: background-color 0.3s;
+            display: flex;
+            justify-content: center;
         }
 
         .button:hover {
@@ -55,62 +57,61 @@
             </div>
 -->
     <form>
-            <div class="form-group">
-                <label for="nom">Nom:</label>
-                <input type="text" class="form-control" id="nom">
+            <div class="input-group" style="width: 300px;">
+                <input id="nom" type="text" class="form-control" name="nom" placeholder="Nom">
             </div>
-
-            <div class="form-group">
-                <label for="cognom">Cognom:</label>
-                <input type="text" class="form-control" id="cognom">
+        <br>
+            <div class="input-group" style="width: 300px;">
+                <input id="cognom" type="text" class="form-control" name="cognom" placeholder="Cognom">
             </div>
-
-            <div class="form-group">
-                <label for="nomusuari">Usuari:</label>
-                <input type="text"  class="form-control" id="nomusuari">
+        <br>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input id="nomusuari" type="password" class="form-control" name="nomusuari" placeholder="Usuari">
             </div>
-
-            <div class="form-group">
-                <label for="password">Contrasenya:</label>
-                <input type="text"  class="form-control" id="password">
+        <br>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input id="password" type="password" class="form-control" name="password" placeholder="Contrasenya">
             </div>
+        <br>
 
-            <button type="submit" class="button">Registrar</button>
+
+        <div class="input-group">
+            <div class="input-group-append">
+                <button id="btnRegistrar" type="submit" class="btn btn-primary" >Registrar</button>
+            </div>
+        </div>
         </form>
     </div>
 
     <script>
-        $(document).ready(function () {
-            $.ajax({
+    $(document).ready(function() {
+        $("#btnRegistrar").click(function() { // Obtener el valor del campo de entrada
+        var nom = $("#nom").val();            // "id"
+        var cognom = $("#cognom").val();
+        var nomusuari = $("#nomusuari").val();
+        var password = $("#password").val();
 
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                url: "dsaApp/usuaris/registreUsuari",
-                data: "{}",
-                dataType: "json",
-                success: function (data) {
-                    alert(data);
-                },
-                error: function (result) {
-                    alert("Error");
-                }
-            });
-            $.post({
-                        url: URL,
-                        data: JSON.stringify(userData),
-                        contentType: 'application/json; charset=utf-8'
-                    })
-                        .done(function (data, status) {
-                            alert("Login correcte" );
-                        })
-                        .fail(function (xhr, err) {
-                            alert("usuari o contrasenya incorrecte");
-                            location.reload();
-                        })
-                    })
-            })
+        // Enviar los datos a través de AJAX
+        $.ajax({
+            url: "dsaApp/usuaris/registreUsuari"
+            method: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: {
+                nombre: nombre,
+                apellido: apellido,
+                usuario: usuario,
+                password: password
+            },
+            dataType: "json",
+            success: function (data) {
+                alert(data);
+            },
+            error: function(xhr, status, error) {
+                alert("Error");
+            }
         });
-
     </script>
 
     <script>
@@ -127,5 +128,5 @@
       });
     });
     </script>
-    </body>
-    </html>
+</body>
+</html>
