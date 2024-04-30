@@ -16,7 +16,10 @@ public interface UsersManager {
 
     //mètodes extres
     public void deleteUsuari(String id);
-    public void addItem(String color, int preu);
-
+    public Item addItem(Item i);
+    public Item addItem(String color, int preu);
+    public Item getItem(String color);
+    public List<Item> findAll();
+    public int size();
 
 }

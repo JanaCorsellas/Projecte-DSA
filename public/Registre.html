@@ -65,5 +65,52 @@
         <button type="submit" class="button">Registrar</button>
     </form>
 </div>
+<script>
+	$(document).ready(function () {
+		$.ajax({
+
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "dsaApp/usuaris/registreUsuari",
+            data: "{}",
+            dataType: "json",
+            success: function (data) {
+                alert(data);
+            },
+            error: function (result) {
+                alert("Error");
+            }
+        });
+        $.post({
+                    url: URL,
+                    data: JSON.stringify(userData),
+                    contentType: 'application/json; charset=utf-8'
+                })
+                    .done(function (data, status) {
+                        alert("Login correcte" );
+                    })
+                    .fail(function (xhr, err) {
+                        alert("usuari o contrasenya incorrecte");
+                        location.reload();
+                    })
+                })
+        })
+	});
+
+</script>
+<script>
+$(document).ready(function(){
+  $("button").click(function(){
+    $.post("dsaApp/usuaris/registreUsuari",
+    {
+      name: "Donald Duck",
+      city: "Duckburg"
+    },
+    registreUsuari(id, nom, cognom, nomusuari){
+      alert("id: " + id + "\nStatus: " + status);
+    });
+  });
+});
+</script>
 </body>
 </html>

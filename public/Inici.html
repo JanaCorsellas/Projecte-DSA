@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inici de sessió</title>
+  <title>Scaperoom</title>
   <style>
         body {
             font-family: Arial, sans-serif;
@@ -41,17 +41,22 @@
 </head>
 <body>
 <div class="container">
-  <img src="https://www.thesafekey.es/wp-content/uploads/2020/07/escape.jpg" alt="Portada" width="650" height="333">
-  <h1>Iniciar sessió</h1>
-  <form action="@{login()}" method="POST">
-    <div class="form-group">
-      <label for="nomusuari">Nom usuari:</label>
-      <input type="text" id="nomusuari" name="nomusuari" required>
-    </div>
-
-    <button id=loginbutton type="submit" class="button">Iniciar sessió</button>
+  <h1>SCAPEROOM</h1>
+  <img src="https://www.thesafekey.es/wp-content/uploads/2020/07/escape.jpg" width="650" height="400">
+  <h2> </h2>
+  <a href="@{Login()}" class="button">Login</a>
+  <a href="@{Registre()}" class="button">Registrar-se</a>
+  <h3> </h3>
+  <form action="/action_page.php">
+    <label for="items">Llista d'ítems de la botiga:</label>
+    <select name="items" id="items">
+      <option value="Blau">Blau</option>
+      <option value="Vermell">Vermell</option>
+      <option value="Verd">Verd</option>
+      <option value="Groc">Groc</option>
+    </select>
+    <br><br>
   </form>
 </div>
-
 </body>
 </html>

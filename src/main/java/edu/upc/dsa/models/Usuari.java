@@ -20,7 +20,7 @@ public class Usuari {
         return id;
     }
 
-    public void setid(String id) {
+    public void setId(String id) {
         this.id = id;
     }
     public String getNom() {

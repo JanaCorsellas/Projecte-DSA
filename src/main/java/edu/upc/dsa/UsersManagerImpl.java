@@ -24,6 +24,13 @@ public class UsersManagerImpl implements UsersManager {
         return instance;
     }
 
+    public int size() {
+        int ret = this.items.size();
+        logger.info("size " + ret);
+
+        return ret;
+    }
+
     @Override
     public Usuari obtenirUsuariPerId(String idUsuari) {
         for (Usuari usuari : usuaris) {
@@ -33,6 +40,11 @@ public class UsersManagerImpl implements UsersManager {
         }
         return null;
     }
+
+    public List<Item> findAll() {
+        return this.items;
+    }
+
     @Override
     public void registreUsuari(String id, String nom, String cognom, String nomusuari) {
         Usuari usuari = new Usuari(id, nom, cognom, nomusuari);
@@ -104,13 +116,30 @@ public class UsersManagerImpl implements UsersManager {
         this.usuaris.remove(t);
     }
 
+    public Item addItem(Item i) {
+        logger.info("new item " + i);
+
+        this.items.add (i);
+        logger.info("new Track added");
+        return i;
+    }
+
+    public Item addItem(String color, int preu) {
+        return this.addItem(new Item(color, preu));
+    }
+
     @Override
-    public void addItem(String color, int preu) {
-        for (Item item : items){
-            if (item.getColor().equals(color)){
-                logger.error("Ja existeix una skin amb aquest color.");
-                return;
+    public Item getItem(String color) {
+        logger.info("getTrack("+color+")");
+
+        for (Item i: this.items) {
+            if (i.getColor().equals(color)) {
+                logger.info("getTrack("+color+"): "+i);
+
+                return i;
             }
         }
+        logger.warn("not found " + color);
+        return null;
     }
 }
