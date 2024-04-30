@@ -18,8 +18,8 @@ public class UsuarisServiceTest {
         this.um = UsersManagerImpl.getInstance();
     }
     @Test
-    public void testaddDron() throws Exception {
-        um.registreUsuari("1", "jordi", "gual", "jgual01");
+    public void testaddUser() throws Exception {
+        um.registreUsuari("1", "jordi", "gual", "jgual01","1234");
         assertNotNull(um.obtenirUsuariPerId("1"));
     }
 

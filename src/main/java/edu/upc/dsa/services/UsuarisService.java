@@ -46,7 +46,7 @@ public class UsuarisService {
 
         //agreguem l'usuari
         UsersManager manager = UsersManagerImpl.getInstance();
-        manager.registreUsuari(usuari.getId(), usuari.getNom(), usuari.getCognom(), usuari.getNomusuari());
+        manager.registreUsuari(usuari.getId(), usuari.getNom(), usuari.getCognom(), usuari.getNomusuari(), usuari.getPassword());
 
         return Response.status(201).entity(usuari).build();
     }

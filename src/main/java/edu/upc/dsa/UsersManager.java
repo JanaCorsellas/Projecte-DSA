@@ -9,7 +9,7 @@ import java.util.List;
 public interface UsersManager {
 
     public Usuari obtenirUsuariPerId (String idUsuari);
-    public void registreUsuari(String id, String nom, String cognom, String nomusuari);
+    public void registreUsuari(String id, String nom, String cognom, String nomusuari, String password);
     public boolean usuariExisteix(String nomUsuari);
     void login(String nomusuari) throws UserNotFoundException;
     public List<Item> llistarItemsPerPreuAscendent();

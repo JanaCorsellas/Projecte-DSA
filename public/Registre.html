@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Registre</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registre</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,79 +43,89 @@
             background-color: #0056b3;
         }
     </style>
-</head>
+
 <body>
 <div class="container">
-    <h1>Registre</h1>
-    <form action="@{registreUsuari()}" method="POST">
-        <div class="form-group">
-            <label for="id">Id:</label>
-            <input type="text" id="id" name="id" required>
-        </div>
-        <div class="form-group">
-            <label for="nom">Nom:</label>
-            <input type="text" id="nom" name="nom" required>
-        </div>
+    <h1>Registre usuari</h1>
+    <!--
+        <form action="@{registreUsuari()}" method="POST">
+            <div class="form-group">
+                <label for="id">Id:</label>
+                <input type="text" id="id" name="id" required>
+            </div>
+-->
+    <form>
+            <div class="form-group">
+                <label for="nom">Nom:</label>
+                <input type="text" class="form-control" id="nom">
+            </div>
 
-        <div class="form-group">
-            <label for="cognom">Cognom:</label>
-            <input type="text" id="cognom" name="cognom" required>
-        </div>
+            <div class="form-group">
+                <label for="cognom">Cognom:</label>
+                <input type="text" class="form-control" id="cognom">
+            </div>
 
-        <div class="form-group">
-            <label for="nomusuari">Usuari:</label>
-            <input type="text" id="nomusuari" name="nomusuari" required>
-        </div>
+            <div class="form-group">
+                <label for="nomusuari">Usuari:</label>
+                <input type="text"  class="form-control" id="nomusuari">
+            </div>
 
-        <button type="submit" class="button">Registrar</button>
-    </form>
-</div>
-<script>
-	$(document).ready(function () {
-		$.ajax({
+            <div class="form-group">
+                <label for="password">Contrasenya:</label>
+                <input type="text"  class="form-control" id="password">
+            </div>
 
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            url: "dsaApp/usuaris/registreUsuari",
-            data: "{}",
-            dataType: "json",
-            success: function (data) {
-                alert(data);
-            },
-            error: function (result) {
-                alert("Error");
-            }
+            <button type="submit" class="button">Registrar</button>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "dsaApp/usuaris/registreUsuari",
+                data: "{}",
+                dataType: "json",
+                success: function (data) {
+                    alert(data);
+                },
+                error: function (result) {
+                    alert("Error");
+                }
+            });
+            $.post({
+                        url: URL,
+                        data: JSON.stringify(userData),
+                        contentType: 'application/json; charset=utf-8'
+                    })
+                        .done(function (data, status) {
+                            alert("Login correcte" );
+                        })
+                        .fail(function (xhr, err) {
+                            alert("usuari o contrasenya incorrecte");
+                            location.reload();
+                        })
+                    })
+            })
         });
-        $.post({
-                    url: URL,
-                    data: JSON.stringify(userData),
-                    contentType: 'application/json; charset=utf-8'
-                })
-                    .done(function (data, status) {
-                        alert("Login correcte" );
-                    })
-                    .fail(function (xhr, err) {
-                        alert("usuari o contrasenya incorrecte");
-                        location.reload();
-                    })
-                })
-        })
-	});
 
-</script>
-<script>
-$(document).ready(function(){
-  $("button").click(function(){
-    $.post("dsaApp/usuaris/registreUsuari",
-    {
-      name: "Donald Duck",
-      city: "Duckburg"
-    },
-    registreUsuari(id, nom, cognom, nomusuari){
-      alert("id: " + id + "\nStatus: " + status);
+    </script>
+
+    <script>
+    $(document).ready(function(){
+      $("button").click(function(){
+        $.post("dsaApp/usuaris/registreUsuari",
+        {
+          name: "Donald Duck",
+          city: "Duckburg"
+        },
+        registreUsuari(id, nom, cognom, nomusuari){
+          alert("id: " + id + "\nStatus: " + status);
+        });
+      });
     });
-  });
-});
-</script>
-</body>
-</html>
+    </script>
+    </body>
+    </html>

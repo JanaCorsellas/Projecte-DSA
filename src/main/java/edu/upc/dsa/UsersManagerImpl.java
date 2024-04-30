@@ -46,8 +46,8 @@ public class UsersManagerImpl implements UsersManager {
     }
 
     @Override
-    public void registreUsuari(String id, String nom, String cognom, String nomusuari) {
-        Usuari usuari = new Usuari(id, nom, cognom, nomusuari);
+    public void registreUsuari(String id, String nom, String cognom, String nomusuari, String password) {
+        Usuari usuari = new Usuari(id, nom, cognom, nomusuari, password);
         if (usuari.getId().equals(id)) {
             logger.error("L'usuari amb aquesta id ja existeix.");
         }
