@@ -6,6 +6,7 @@ import edu.upc.dsa.exception.UserNotFoundException;
 import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
 
+
 import java.util.List;
 
 public interface GameManager {
@@ -25,3 +26,4 @@ public interface GameManager {
     public int size();
 
 }
+

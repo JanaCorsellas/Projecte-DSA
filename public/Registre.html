@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Registre</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registre</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,90 +32,101 @@
             font-size: 16px;
             cursor: pointer;
             border: none;
-            border-radius: 5px;
+            border-radius: 15px;
             background-color: MediumSeaGreen;
             color: #fff;
             text-decoration: none;
             transition: background-color 0.3s;
+            display: flex;
+            justify-content: center;
         }
 
         .button:hover {
             background-color: #0056b3;
         }
     </style>
-</head>
+
 <body>
 <div class="container">
-    <h1>Registre</h1>
-    <form action="@{registreUsuari()}" method="POST">
-        <div class="form-group">
-            <label for="id">Id:</label>
-            <input type="text" id="id" name="id" required>
-        </div>
-        <div class="form-group">
-            <label for="nom">Nom:</label>
-            <input type="text" id="nom" name="nom" required>
-        </div>
+    <h1>Registre usuari</h1>
+    <!--
+        <form action="@{registreUsuari()}" method="POST">
+            <div class="form-group">
+                <label for="id">Id:</label>
+                <input type="text" id="id" name="id" required>
+            </div>
+-->
+    <form>
+            <div class="input-group" style="width: 300px;">
+                <input id="nom" type="text" class="form-control" name="nom" placeholder="Nom">
+            </div>
+        <br>
+            <div class="input-group" style="width: 300px;">
+                <input id="cognom" type="text" class="form-control" name="cognom" placeholder="Cognom">
+            </div>
+        <br>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input id="nomusuari" type="password" class="form-control" name="nomusuari" placeholder="Usuari">
+            </div>
+        <br>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input id="password" type="password" class="form-control" name="password" placeholder="Contrasenya">
+            </div>
+        <br>
 
-        <div class="form-group">
-            <label for="cognom">Cognom:</label>
-            <input type="text" id="cognom" name="cognom" required>
+
+        <div class="input-group">
+            <div class="input-group-append">
+                <button id="btnRegistrar" type="submit" class="btn btn-primary" >Registrar</button>
+            </div>
         </div>
+        </form>
+    </div>
 
-        <div class="form-group">
-            <label for="nomusuari">Usuari:</label>
-            <input type="text" id="nomusuari" name="nomusuari" required>
-        </div>
+    <script>
+    $(document).ready(function() {
+        $("#btnRegistrar").click(function() { // Obtener el valor del campo de entrada
+        var nom = $("#nom").val();            // "id"
+        var cognom = $("#cognom").val();
+        var nomusuari = $("#nomusuari").val();
+        var password = $("#password").val();
 
-        <button type="submit" class="button">Registrar</button>
-    </form>
-</div>
-<script>
-	$(document).ready(function () {
-		$.ajax({
-
-            type: "POST",
+        // Enviar los datos a través de AJAX
+        $.ajax({
+            url: "dsaApp/usuaris/registreUsuari"
+            method: "POST",
             contentType: "application/json; charset=utf-8",
-            url: "dsaApp/usuaris/registreUsuari",
-            data: "{}",
+            data: {
+                nombre: nombre,
+                apellido: apellido,
+                usuario: usuario,
+                password: password
+            },
             dataType: "json",
             success: function (data) {
                 alert(data);
             },
-            error: function (result) {
+            error: function(xhr, status, error) {
                 alert("Error");
             }
         });
-        $.post({
-                    url: URL,
-                    data: JSON.stringify(userData),
-                    contentType: 'application/json; charset=utf-8'
-                })
-                    .done(function (data, status) {
-                        alert("Login correcte" );
-                    })
-                    .fail(function (xhr, err) {
-                        alert("usuari o contrasenya incorrecte");
-                        location.reload();
-                    })
-                })
-        })
-	});
+    </script>
 
-</script>
-<script>
-$(document).ready(function(){
-  $("button").click(function(){
-    $.post("dsaApp/usuaris/registreUsuari",
-    {
-      name: "Donald Duck",
-      city: "Duckburg"
-    },
-    registreUsuari(id, nom, cognom, nomusuari){
-      alert("id: " + id + "\nStatus: " + status);
+    <script>
+    $(document).ready(function(){
+      $("button").click(function(){
+        $.post("dsaApp/usuaris/registreUsuari",
+        {
+          name: "Donald Duck",
+          city: "Duckburg"
+        },
+        registreUsuari(id, nom, cognom, nomusuari){
+          alert("id: " + id + "\nStatus: " + status);
+        });
+      });
     });
-  });
-});
-</script>
+    </script>
 </body>
 </html>
