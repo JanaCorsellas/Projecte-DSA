@@ -1,17 +1,19 @@
 package edu.upc.dsa;
 
+import edu.upc.dsa.exception.IncorrectPasswordException;
+import edu.upc.dsa.exception.UserAlreadyExistsException;
 import edu.upc.dsa.exception.UserNotFoundException;
 import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
 
 import java.util.List;
 
-public interface UsersManager {
+public interface GameManager {
 
-    public Usuari obtenirUsuariPerId (String idUsuari);
-    public void registreUsuari(String id, String nom, String cognom, String nomusuari);
+    public Usuari obtenirUsuariPerNomusuari(String nomUsuari);
+    public void registreUsuari(String nom, String cognom, String nomusuari, String contrasenya) throws UserAlreadyExistsException;
     public boolean usuariExisteix(String nomUsuari);
-    void login(String nomusuari) throws UserNotFoundException;
+    void login(String nomusuari, String contrasenya) throws UserNotFoundException, IncorrectPasswordException;
     public List<Item> llistarItemsPerPreuAscendent();
 
     //mètodes extres

@@ -1,36 +1,37 @@
 package edu.upc.dsa.services;
 
 
-import edu.upc.dsa.UsersManager;
-import edu.upc.dsa.UsersManagerImpl;
+import edu.upc.dsa.GameManager;
+import edu.upc.dsa.GameManagerImpl;
+import edu.upc.dsa.exception.IncorrectPasswordException;
+import edu.upc.dsa.exception.UserAlreadyExistsException;
 import edu.upc.dsa.exception.UserNotFoundException;
-import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
+import edu.upc.dsa.models.UsuariLogin;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 @Api(value = "/usuaris", description = "Endpoint to Usuari Service")
 @Path("/usuaris")
 public class UsuarisService {
 
-    private UsersManager um;
+    private GameManager um;
 
     public UsuarisService() {
-        this.um = UsersManagerImpl.getInstance();
+        this.um = GameManagerImpl.getInstance();
     }
 
     @POST
     @ApiOperation(value = "Registrar un nou usuari", notes = "Afegirem un usuari nou")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Exitós", response= Usuari.class),
+            @ApiResponse(code = 409, message = "El nom d'usuari ja existeix"),
             @ApiResponse(code = 500, message = "Error de validació")
 
     })
@@ -39,46 +40,39 @@ public class UsuarisService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response registreUsuari(Usuari usuari){
-        //verifiquem si es proporciona un usuari vàlid
-        if (usuari == null || usuari.getId() == null || usuari.getNom() == null || usuari.getCognom() == null || usuari.getNomusuari() == null) {
-            return Response.status(500).entity("Error de validació: Informació d'usuari incompleta").build();
+        try {
+            GameManager manager = GameManagerImpl.getInstance();
+            manager.registreUsuari(usuari.getNom(), usuari.getCognom(), usuari.getNomusuari(), usuari.getContrasenya());
+
+            return Response.status(201).entity(usuari).build();
+        } catch (UserAlreadyExistsException e) {
+            return Response.status(409).entity("El nom d'usuari ja existeix").build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error intern del servidor").build();
         }
-
-        //agreguem l'usuari
-        UsersManager manager = UsersManagerImpl.getInstance();
-        manager.registreUsuari(usuari.getId(), usuari.getNom(), usuari.getCognom(), usuari.getNomusuari());
-
-        return Response.status(201).entity(usuari).build();
     }
 
     @POST
     @ApiOperation(value = "Iniciar sessió", notes = "Iniciar sessió amb usuari")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Inicio de sesión exitoso"),
+            @ApiResponse(code = 200, message = "Exitós"),
             @ApiResponse(code = 401, message = "Nom d'usuari incorrecte"),
-            @ApiResponse(code = 500, message = "Error interno del servidor")
+            @ApiResponse(code = 500, message = "Error intern del servidor")
     })
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response login(Usuari usuari) {
-        // Verificar si se proporciona un nombre de usuario válido
-        if (usuari == null || usuari.getNomusuari() == null) {
-            return Response.status(401).entity("Nom d'usuari invàlid").build();
-        }
-
-        // Intentar iniciar sesión con el nombre de usuario proporcionado
-        UsersManager manager = UsersManagerImpl.getInstance();
+    public Response login(UsuariLogin usuari) {
+        GameManager manager = GameManagerImpl.getInstance();
         try {
-            manager.login(usuari.getNomusuari());
-            // Si no se lanzó una excepción, entonces el inicio de sesión fue exitoso
+            manager.login(usuari.getNomusuari(), usuari.getContrasenya());
             return Response.status(200).entity("Inici de sessió exitós").build();
         } catch (UserNotFoundException e) {
-            // Si se lanzó una excepción, entonces el nombre de usuario no existe en el sistema
-            return Response.status(401).entity("Nombre de usuario invàlid").build();
+            return Response.status(401).entity("Nom d'usuari invàlid").build();
+        } catch (IncorrectPasswordException e) {
+            return Response.status(401).entity("Contrasenya incorrecte").build();
         } catch (Exception e) {
-            // Capturar cualquier otro error interno del servidor
-            return Response.status(500).entity("Error interno del servidor").build();
+            return Response.status(500).entity("Error intern del servidor").build();
         }
     }
 

@@ -1,13 +1,13 @@
-segona versió backend i web
+tercera versió backend i web
 
-- nova classe implementada: Sala
+- nova classe implementada: UsuariLogin (pel login dels usuaris)
+- noves excepcions implementades: contrasenya incorrecte i usuari ja existeix
 - he arreglat algunes funcions
 
 Swagger:
 - funció registre correcte
-- funció login no va
+- funció login correcte
 - obtenir items de la llista correcte
 
 Web:
-- 3 fitxers: inici, login i registre
-- falta implementar les funcions perquè funcioni
+no hi ha millores

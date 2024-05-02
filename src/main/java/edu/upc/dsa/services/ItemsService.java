@@ -1,10 +1,8 @@
 package edu.upc.dsa.services;
 
-import edu.upc.dsa.UsersManager;
-import edu.upc.dsa.UsersManagerImpl;
-import edu.upc.dsa.exception.UserNotFoundException;
+import edu.upc.dsa.GameManager;
+import edu.upc.dsa.GameManagerImpl;
 import edu.upc.dsa.models.Item;
-import edu.upc.dsa.models.Usuari;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -14,16 +12,15 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "/items", description = "Endpoint to Item Service")
 @Path("/items")
 public class ItemsService {
-    private UsersManager um;
+    private GameManager um;
 
     public ItemsService() {
-        this.um = UsersManagerImpl.getInstance();
+        this.um = GameManagerImpl.getInstance();
         if (um.size()==0) {
             this.um.addItem("Vermell", 1);
             this.um.addItem("Verd", 2);
@@ -56,7 +53,7 @@ public class ItemsService {
     @Path("/llistarItems")
     @Produces(MediaType.APPLICATION_JSON)
     public Response llistarItemsPerPreuAscendent() {
-        UsersManager manager = UsersManagerImpl.getInstance();
+        GameManager manager = GameManagerImpl.getInstance();
 
         try {
             //obtenir la llista d'ítems odrenats per preu

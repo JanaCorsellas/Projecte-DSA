@@ -1,5 +1,7 @@
 package edu.upc.dsa;
 
+import edu.upc.dsa.exception.IncorrectPasswordException;
+import edu.upc.dsa.exception.UserAlreadyExistsException;
 import edu.upc.dsa.exception.UserNotFoundException;
 import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
@@ -8,19 +10,19 @@ import java.util.*;
 
 import org.apache.log4j.Logger;
 
-public class UsersManagerImpl implements UsersManager {
-    private static UsersManager instance;
+public class GameManagerImpl implements GameManager {
+    private static GameManager instance;
     protected List<Usuari> usuaris;
     protected List<Item> items;
-    final static Logger logger = Logger.getLogger(UsersManagerImpl.class);
+    final static Logger logger = Logger.getLogger(GameManagerImpl.class);
 
-    private UsersManagerImpl() {
+    private GameManagerImpl() {
         this.usuaris = new LinkedList<>();
         this.items = new LinkedList<>();
     }
 
-    public static UsersManager getInstance() {
-        if (instance==null) instance = new UsersManagerImpl();
+    public static GameManager getInstance() {
+        if (instance==null) instance = new GameManagerImpl();
         return instance;
     }
 
@@ -32,9 +34,9 @@ public class UsersManagerImpl implements UsersManager {
     }
 
     @Override
-    public Usuari obtenirUsuariPerId(String idUsuari) {
+    public Usuari obtenirUsuariPerNomusuari(String nomUsuari) {
         for (Usuari usuari : usuaris) {
-            if (usuari.getId().equals(idUsuari)) {
+            if (usuari.getNomusuari().equals(nomUsuari)) {
                 return usuari;
             }
         }
@@ -46,14 +48,23 @@ public class UsersManagerImpl implements UsersManager {
     }
 
     @Override
-    public void registreUsuari(String id, String nom, String cognom, String nomusuari) {
-        Usuari usuari = new Usuari(id, nom, cognom, nomusuari);
-        if (usuari.getId().equals(id)) {
-            logger.error("L'usuari amb aquesta id ja existeix.");
+    public void registreUsuari(String nom, String cognom, String nomusuari, String contrasenya) throws UserAlreadyExistsException {
+        /*Usuari usuari = new Usuari(nom, cognom, nomusuari, contrasenya);
+        if (usuari.getNomusuari().equals(nomusuari)) {
+            logger.error("Aquest nom d'usuari ja existeix.");
         }
         else {
             this.usuaris.add(usuari);
+        }*/
+        for (Usuari usuari : usuaris) {
+            if (usuari.getNomusuari().equals(nomusuari)) {
+                throw new UserAlreadyExistsException("Aquest nom d'usuari ja existeix: " + nomusuari);
+            }
         }
+
+        // Si el nombre de usuario no está en uso, registra el usuario
+        Usuari usuari = new Usuari(nom, cognom, nomusuari, contrasenya);
+        this.usuaris.add(usuari);
     }
     @Override
     public boolean usuariExisteix(String nomUsuari) {
@@ -66,27 +77,24 @@ public class UsersManagerImpl implements UsersManager {
         }
         return false;
     }
+    public boolean contrasenyaCorrecte(String nomusuari, String contrasenya) {
+        Usuari usuari = obtenirUsuariPerNomusuari(nomusuari);
 
-    /*@Override
-    public void login(String nomusuari) {
-        boolean found = false;
-        for (Usuari usuari : usuaris) {
-            if (usuari.getNomusuari().equals(nomusuari)) {
-                found = true;
-                break;
-            }
+        if (usuari == null) {
+            return false;
         }
-        if (found) {
-            logger.info("Usuari " + nomusuari + " trobat. Accés concedit.");
-        } else {
-            logger.error("L'usuari " + nomusuari + " no existeix.");
-        }
-    }*/
-    public void login(String nomusuari) throws UserNotFoundException {
+
+        // Comparar la contraseña proporcionada con la contraseña almacenada para el usuario
+        return usuari.getContrasenya().equals(contrasenya);
+    }
+    public void login(String nomusuari, String contrasenya) throws UserNotFoundException, IncorrectPasswordException {
         // Lógica para buscar el usuario en tu sistema
         // Si el usuario no se encuentra, lanza la excepción
         if (!usuariExisteix(nomusuari)) {
             throw new UserNotFoundException("El usuario no existe" + nomusuari);
+        }
+        if (!contrasenyaCorrecte(nomusuari, contrasenya)){
+            throw new IncorrectPasswordException("Contrasenya incorrecte");
         }
         else{
             logger.info("Usuari existeix");
@@ -107,8 +115,8 @@ public class UsersManagerImpl implements UsersManager {
 
     //mètodes extres
     @Override
-    public void deleteUsuari(String id) {
-        Usuari t = this.obtenirUsuariPerId(id);
+    public void deleteUsuari(String nomusuari) {
+        Usuari t = this.obtenirUsuariPerNomusuari(nomusuari);
         if (t==null){
             logger.warn("no s'ha trobat l'usuari " + t);
         }

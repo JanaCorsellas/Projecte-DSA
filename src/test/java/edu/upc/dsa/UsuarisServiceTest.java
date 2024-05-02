@@ -1,26 +1,22 @@
 package edu.upc.dsa;
 
-import edu.upc.dsa.models.Item;
-import edu.upc.dsa.models.Usuari;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class UsuarisServiceTest {
-    UsersManager um;
+    GameManager um;
 
     @Before
     public void setUp() throws Exception {
-        this.um = UsersManagerImpl.getInstance();
+        this.um = GameManagerImpl.getInstance();
     }
     @Test
-    public void testaddDron() throws Exception {
-        um.registreUsuari("1", "jordi", "gual", "jgual01");
-        assertNotNull(um.obtenirUsuariPerId("1"));
+    public void testaddUsuari() throws Exception {
+        um.registreUsuari("jordi", "gual", "jgual01", "1234");
+        assertNotNull(um.obtenirUsuariPerNomusuari("jgual01"));
     }
 
     @Test
