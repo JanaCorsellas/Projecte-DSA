@@ -9,124 +9,109 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+<style>
+    body {
+        background-image: url('/carta.avif');
+        font-family: 'Impact', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: white
+    }
 
-        .container {
-            text-align: center;
-        }
+    .container {
+        text-align: center;
+    }
 
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 15px;
-            background-color: MediumSeaGreen;
-            color: #fff;
-            text-decoration: none;
-            transition: background-color 0.3s;
-            display: flex;
-            justify-content: center;
-        }
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 15px;
+        background-color: MediumSeaGreen;
+        color: #fff;
+        text-decoration: none;
+        transition: background-color 0.3s;
+        display: flex;
+        justify-content: center;
+    }
 
-        .button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    .button:hover {
+        background-color: #0056b3;
+    }
+</style>
 
 <body>
 <div class="container">
-    <h1>Registre usuari</h1>
-    <!--
-        <form action="@{registreUsuari()}" method="POST">
-            <div class="form-group">
-                <label for="id">Id:</label>
-                <input type="text" id="id" name="id" required>
-            </div>
--->
-    <form>
-            <div class="input-group" style="width: 300px;">
-                <input id="nom" type="text" class="form-control" name="nom" placeholder="Nom">
-            </div>
+    <h1>REGISTRE DE PRESOS</h1>
+    <form id="registroForm">
+        <div class="input-group" style="width: 300px;">
+            <input id="nom" type="text" class="form-control" name="nom" placeholder="Nom">
+        </div>
         <br>
-            <div class="input-group" style="width: 300px;">
-                <input id="cognom" type="text" class="form-control" name="cognom" placeholder="Cognom">
-            </div>
+        <div class="input-group" style="width: 300px;">
+            <input id="cognom" type="text" class="form-control" name="cognom" placeholder="Cognom">
+        </div>
         <br>
-            <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                <input id="nomusuari" type="password" class="form-control" name="nomusuari" placeholder="Usuari">
-            </div>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+            <input id="nomusuari" type="text" class="form-control" name="nomusuari" placeholder="Sobrenom">
+        </div>
         <br>
-            <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                <input id="password" type="password" class="form-control" name="password" placeholder="Contrasenya">
-            </div>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+            <input id="password" type="password" class="form-control" name="password" placeholder="Contrasenya">
+        </div>
         <br>
-
 
         <div class="input-group">
             <div class="input-group-append">
-                <button id="btnRegistrar" type="submit" class="btn btn-primary" >Registrar</button>
+                <button type="submit" class="btn btn-primary" >Registrar</button>
             </div>
         </div>
-        </form>
-    </div>
+    </form>
+</div>
 
-    <script>
+<script>
     $(document).ready(function() {
-        $("#btnRegistrar").click(function() { // Obtener el valor del campo de entrada
-        var nom = $("#nom").val();            // "id"
-        var cognom = $("#cognom").val();
-        var nomusuari = $("#nomusuari").val();
-        var password = $("#password").val();
+        $("#registroForm").submit(function(event) {
+            event.preventDefault();
+            var nom = $("#nom").val();
+            var cognom = $("#cognom").val();
+            var nomusuari = $("#nomusuari").val();
+            var password = $("#password").val();
 
-        // Enviar los datos a través de AJAX
-        $.ajax({
-            url: "dsaApp/usuaris/registreUsuari"
-            method: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: {
-                nombre: nombre,
-                apellido: apellido,
-                usuario: usuario,
+            var datosUsuario = {
+                nom: nom,
+                cognom: cognom,
+                nomusuari: nomusuari,
                 password: password
-            },
-            dataType: "json",
-            success: function (data) {
-                alert(data);
-            },
-            error: function(xhr, status, error) {
-                alert("Error");
-            }
-        });
-    </script>
+            };
 
-    <script>
-    $(document).ready(function(){
-      $("button").click(function(){
-        $.post("dsaApp/usuaris/registreUsuari",
-        {
-          name: "Donald Duck",
-          city: "Duckburg"
-        },
-        registreUsuari(id, nom, cognom, nomusuari){
-          alert("id: " + id + "\nStatus: " + status);
+            // Enviar los datos a través de AJAX
+            $.ajax({
+                url: "/dsaApp/usuaris/registreUsuari",
+                method: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(datosUsuario),
+                dataType: "json",
+                success: function (data) {
+                    alert("Usuari registrat correctament");
+                    window.location.href = "/Inici.html";
+                },
+                error: function(xhr, status, error) {
+                    alert("Error, usuari ja registrat");
+                }
+            });
         });
-      });
     });
-    </script>
+</script>
 </body>
 </html>

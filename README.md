@@ -1,13 +1,9 @@
-tercera versió backend i web
+Backend:
+- tot funciona correctament
 
-- nova classe implementada: UsuariLogin (pel login dels usuaris)
-- noves excepcions implementades: contrasenya incorrecte i usuari ja existeix
-- he arreglat algunes funcions
+Pàgina Web:
+- tenim tota la implementació
+- sembla que els usuaris es poden registrar
+- error: no es pot iniciar sessió amb un usuari acabat de registrar!
 
-Swagger:
-- funció registre correcte
-- funció login correcte
-- obtenir items de la llista correcte
-
-Web:
-no hi ha millores
+- faltaria fer la llista de productes de la botiga (agafar-los del servidor i no com estan ara escrits al html)
