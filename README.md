@@ -1,3 +1,5 @@
+versió 4
+
 Backend:
 - login
 - registre
