@@ -133,8 +133,8 @@
         <h2>Iniciar Sessió</h2>
         <form id="loginForm">
           <div class="form-group">
-            <label for="usuari">Nom d'usuari:</label>
-            <input type="text" class="form-control" id="usuari" name="usuari">
+            <label for="nomusuari">Nom d'usuari:</label>
+            <input type="text" class="form-control" id="nomusuari" name="nomusuari">
           </div>
           <div class="form-group">
             <label for="password">Contrasenya:</label>
@@ -227,11 +227,11 @@
         window.location.href = "/Registre.html";
     });
     $("#endavant").click(function(event) {
-        const usuari = $("#usuari").val();
+        const nomusuari = $("#nomusuari").val();
         const contrasenya = $("#password").val();
-        if (usuari !== "" && contrasenya !== ""){
+        if (nomusuari !== "" && contrasenya !== ""){
                 const datos = {
-                    usuari: usuari,
+                    nomusuari: nomusuari,
                     contrasenya: contrasenya
                 };
 				$.ajax({
