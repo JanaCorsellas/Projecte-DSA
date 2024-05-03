@@ -12,6 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "/items", description = "Endpoint to Item Service")
@@ -34,12 +35,11 @@ public class ItemsService {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Item.class, responseContainer="List"),
     })
-    @Path("/")
+    @Path("/llista")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getItems() {
 
         List<Item> items = this.um.findAll();
-
         GenericEntity<List<Item>> entity = new GenericEntity<List<Item>>(items) {};
         return Response.status(201).entity(entity).build()  ;
     }

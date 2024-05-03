@@ -20,7 +20,7 @@ public class Item { //de moment els ítems seran skins de diferents colors
     public int getPreu(){
         return preu;
     }
-    public void setId(int preu){
+    public void setPreu(int preu){
         this.preu = preu;
     }
 

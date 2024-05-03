@@ -13,6 +13,7 @@ public interface GameManager {
 
     public Usuari obtenirUsuariPerNomusuari(String nomUsuari);
     public void registreUsuari(String nom, String cognom, String nomusuari, String contrasenya) throws UserAlreadyExistsException;
+    public List<Usuari> llistaUsuaris();
     public boolean usuariExisteix(String nomUsuari);
     void login(String nomusuari, String contrasenya) throws UserNotFoundException, IncorrectPasswordException;
     public List<Item> llistarItemsPerPreuAscendent();
@@ -21,7 +22,7 @@ public interface GameManager {
     public void deleteUsuari(String id);
     public Item addItem(Item i);
     public Item addItem(String color, int preu);
-    public Item getItem(String color);
+    public Item getItem(String color, int preu);
     public List<Item> findAll();
     public int size();
 

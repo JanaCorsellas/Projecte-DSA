@@ -49,13 +49,6 @@ public class GameManagerImpl implements GameManager {
 
     @Override
     public void registreUsuari(String nom, String cognom, String nomusuari, String contrasenya) throws UserAlreadyExistsException {
-        /*Usuari usuari = new Usuari(nom, cognom, nomusuari, contrasenya);
-        if (usuari.getNomusuari().equals(nomusuari)) {
-            logger.error("Aquest nom d'usuari ja existeix.");
-        }
-        else {
-            this.usuaris.add(usuari);
-        }*/
         for (Usuari usuari : usuaris) {
             if (usuari.getNomusuari().equals(nomusuari)) {
                 throw new UserAlreadyExistsException("Aquest nom d'usuari ja existeix: " + nomusuari);
@@ -65,6 +58,10 @@ public class GameManagerImpl implements GameManager {
         // Si el nombre de usuario no está en uso, registra el usuario
         Usuari usuari = new Usuari(nom, cognom, nomusuari, contrasenya);
         this.usuaris.add(usuari);
+    }
+    @Override
+    public List<Usuari> llistaUsuaris() {
+        return new ArrayList<>(usuaris);
     }
     @Override
     public boolean usuariExisteix(String nomUsuari) {
@@ -87,17 +84,19 @@ public class GameManagerImpl implements GameManager {
         // Comparar la contraseña proporcionada con la contraseña almacenada para el usuario
         return usuari.getContrasenya().equals(contrasenya);
     }
+
+    @Override
     public void login(String nomusuari, String contrasenya) throws UserNotFoundException, IncorrectPasswordException {
         // Lógica para buscar el usuario en tu sistema
         // Si el usuario no se encuentra, lanza la excepción
         if (!usuariExisteix(nomusuari)) {
-            throw new UserNotFoundException("El usuario no existe" + nomusuari);
+            throw new UserNotFoundException("L'usuari no existeix" + nomusuari);
         }
         if (!contrasenyaCorrecte(nomusuari, contrasenya)){
             throw new IncorrectPasswordException("Contrasenya incorrecte");
         }
         else{
-            logger.info("Usuari existeix");
+            logger.info("Has iniciat sessió");
         }
     }
 
@@ -111,8 +110,6 @@ public class GameManagerImpl implements GameManager {
         return itemsOrdenats;
     }
 
-
-
     //mètodes extres
     @Override
     public void deleteUsuari(String nomusuari) {
@@ -125,10 +122,10 @@ public class GameManagerImpl implements GameManager {
     }
 
     public Item addItem(Item i) {
-        logger.info("new item " + i);
+        logger.info("nou item " + i);
 
         this.items.add (i);
-        logger.info("new Track added");
+        logger.info("nou skin afegit");
         return i;
     }
 
@@ -137,13 +134,12 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public Item getItem(String color) {
-        logger.info("getTrack("+color+")");
+    public Item getItem(String color, int preu) {
+        logger.info("getItem(" + color + ")");
 
-        for (Item i: this.items) {
-            if (i.getColor().equals(color)) {
-                logger.info("getTrack("+color+"): "+i);
-
+        for (Item i : this.items) {
+            if (i.getColor().equalsIgnoreCase(color)) { // Usamos equalsIgnoreCase para ignorar diferencias de mayúsculas/minúsculas
+                logger.info("getItem(" + color + "): " + i);
                 return i;
             }
         }

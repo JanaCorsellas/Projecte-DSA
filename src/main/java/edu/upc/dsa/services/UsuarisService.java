@@ -6,6 +6,7 @@ import edu.upc.dsa.GameManagerImpl;
 import edu.upc.dsa.exception.IncorrectPasswordException;
 import edu.upc.dsa.exception.UserAlreadyExistsException;
 import edu.upc.dsa.exception.UserNotFoundException;
+import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
 import edu.upc.dsa.models.UsuariLogin;
 import io.swagger.annotations.Api;
@@ -14,8 +15,10 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Api(value = "/usuaris", description = "Endpoint to Usuari Service")
 @Path("/usuaris")
@@ -74,6 +77,20 @@ public class UsuarisService {
         } catch (Exception e) {
             return Response.status(500).entity("Error intern del servidor").build();
         }
+    }
+
+    @GET
+    @ApiOperation(value = "Obtenir una llista de tots els usuaris", notes = "usuaris de la presó")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Usuari.class, responseContainer="List"),
+    })
+    @Path("/llistaUsuaris")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUsuaris() {
+
+        List<Usuari> usuaris = this.um.llistaUsuaris();
+        GenericEntity<List<Usuari>> entity = new GenericEntity<List<Usuari>>(usuaris) {};
+        return Response.status(201).entity(entity).build()  ;
     }
 
 }

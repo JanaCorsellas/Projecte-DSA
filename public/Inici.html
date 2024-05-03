@@ -80,6 +80,12 @@
           text-decoration: none;
           cursor: pointer;
         }
+        #tabla-productos td {
+            text-align: left; /* Alinea todo el texto a la izquierda */
+        }
+        #tabla-productos th {
+            font-size: 18px; /* Cambia el tamaño de la fuente */
+        }
 
 
     </style>
@@ -90,9 +96,11 @@
     <div class="navbar-header">
       <ul class="nav navbar-nav navbar-left">
         <li><a id="info_button" href="#about">HISTÒRIA</a></li>
-        <li><a id="botiga_button" href="#" onclick="mostrarProductos()">BOTIGA</a></li>
+        <li><a id="botiga_button" href="#">BOTIGA</a></li>
+        <li><a id="usuaris" href="#" onclick="mostrarListaUsuarios()">USUARIS</a></li>
       </ul>
     </div>
+    <ul id="llista-usuaris"></ul>
     <div id="myModal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
@@ -104,31 +112,17 @@
     </div>
     <div id="myModal2" class="modal">
       <div class="modal-content">
-        <span class="close">&times;</span>
-        <table class="table">
+        <span class="close" onclick="cerrarModal('myModal2')">&times;</span>
+        <h2>BOTIGA</h2>
+        <table id="tabla-productos" class="table">
           <thead>
           <tr>
-            <th>SKINS</th>
-            <th>PREU</th>
+            <th>Color skin</th>
+            <th>Preu</th>
           </tr>
           </thead>
           <tbody>
-          <tr>
-            <td>Vermell</td>
-            <td>$10</td>
-          </tr>
-          <tr>
-            <td>Blau</td>
-            <td>$20</td>
-          </tr>
-          <tr>
-            <td>Groc</td>
-            <td>$30</td>
-          </tr>
-          <tr>
-            <td>Verd</td>
-            <td>$40</td>
-          </tr>
+          <!-- Aquí se mostrarán los productos -->
           </tbody>
         </table>
       </div>
@@ -136,7 +130,7 @@
     <div id="myModal3" class="modal">
       <div class="modal-content">
         <span class="close" onclick="cerrarModal('myModal3')">&times;</span>
-        <h2>Iniciar Sesión</h2>
+        <h2>Iniciar Sessió</h2>
         <form id="loginForm">
           <div class="form-group">
             <label for="usuari">Nom d'usuari:</label>
@@ -146,7 +140,7 @@
             <label for="password">Contrasenya:</label>
             <input type="password" class="form-control" id="password" name="password">
           </div>
-          <button id="endavant" type="button" class="btn btn-primary">Iniciar Sesión</button>
+          <button id="endavant" type="button" class="btn btn-primary">Iniciar Sessió</button>
         </form>
       </div>
     </div>
@@ -185,6 +179,19 @@
 
     // Mostrar modal de la botiga cuando se hace clic en BOTIGA
     $("#botiga_button").click(function() {
+        $.get("/dsaApp/items/llista", function(data) {
+            // Limpiar la tabla de productos
+            $("#tabla-productos tbody").empty();
+            // Recorrer la lista de productos y agregar cada uno a la tabla
+            data.forEach(function(item) {
+                $("#tabla-productos tbody").append(
+                    "<tr>" +
+                    "<td>" + item.color + "</td>" +
+                    "<td>" + item.preu + "</td>" +
+                    "</tr>"
+                );
+            });
+        });
         $("#myModal2").show();
     });
 
@@ -203,6 +210,16 @@
     // Redireccionar a la página de inicio de sesión cuando se hace clic en Iniciar sesión
     $("#inicio_button").click(function(event) {
         $("#myModal3").show();
+    });
+
+    $("#myModal3 .close").click(function() {
+        $("#myModal3").hide();
+    });
+
+    $(window).click(function(event) {
+        if (event.target === $("#myModal3")[0]) {
+            $("#myModal3").hide();
+        }
     });
 
     // Redireccionar a la página de registro cuando se hace clic en Registrarse
@@ -235,6 +252,16 @@
 				alert("Si us plau, completa tots els camps");
 			}
     });
+    function mostrarListaUsuarios() {
+        $.get("/dsaApp/usuaris/llistaUsuaris", function(data) {
+            // Limpiar la lista de usuarios antes de agregar los nuevos
+            $("#llista-usuaris").empty();
+
+            data.forEach(function(usuari) {
+                $("#llista-usuaris").append("<li>" + usuari.nomusuari + "</li>");
+            });
+        });
+    }
 });
 </script>
 </html>
