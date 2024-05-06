@@ -2,13 +2,13 @@ package edu.upc.dsa.models;
 
 public class UsuariLogin {
     String nomusuari;
-    String contrasenya;
+    String password;
 
     public UsuariLogin(){}
 
-    public UsuariLogin (String nomusuari, String contrasenya){
+    public UsuariLogin (String nomusuari, String password){
         this.nomusuari = nomusuari;
-        this.contrasenya = contrasenya;
+        this.password = password;
     }
 
     public String getNomusuari(){
@@ -19,11 +19,11 @@ public class UsuariLogin {
         this.nomusuari = nomusuari;
     }
 
-    public String getContrasenya() {
-        return contrasenya;
+    public String getPassword() {
+        return password;
     }
 
-    public void setContrasenya(String contrasenya) {
-        this.contrasenya = contrasenya;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

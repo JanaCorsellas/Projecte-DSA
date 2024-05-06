@@ -3,9 +3,11 @@ package edu.upc.dsa;
 import edu.upc.dsa.exception.IncorrectPasswordException;
 import edu.upc.dsa.exception.UserAlreadyExistsException;
 import edu.upc.dsa.exception.UserNotFoundException;
-import edu.upc.dsa.models.Item;
+import edu.upc.dsa.models.Botiga;
 import edu.upc.dsa.models.Usuari;
 
+import java.awt.image.BufferedImage;
+import java.nio.Buffer;
 import java.util.*;
 
 import org.apache.log4j.Logger;
@@ -13,7 +15,7 @@ import org.apache.log4j.Logger;
 public class GameManagerImpl implements GameManager {
     private static GameManager instance;
     protected List<Usuari> usuaris;
-    protected List<Item> items;
+    protected List<Botiga> items;
     final static Logger logger = Logger.getLogger(GameManagerImpl.class);
 
     private GameManagerImpl() {
@@ -43,12 +45,12 @@ public class GameManagerImpl implements GameManager {
         return null;
     }
 
-    public List<Item> findAll() {
+    public List<Botiga> findAll() {
         return this.items;
     }
 
     @Override
-    public void registreUsuari(String nom, String cognom, String nomusuari, String contrasenya) throws UserAlreadyExistsException {
+    public void registreUsuari(String nom, String cognom, String nomusuari, String password) throws UserAlreadyExistsException {
         for (Usuari usuari : usuaris) {
             if (usuari.getNomusuari().equals(nomusuari)) {
                 throw new UserAlreadyExistsException("Aquest nom d'usuari ja existeix: " + nomusuari);
@@ -56,7 +58,7 @@ public class GameManagerImpl implements GameManager {
         }
 
         // Si el nombre de usuario no está en uso, registra el usuario
-        Usuari usuari = new Usuari(nom, cognom, nomusuari, contrasenya);
+        Usuari usuari = new Usuari(nom, cognom, nomusuari, password);
         this.usuaris.add(usuari);
     }
     @Override
@@ -74,7 +76,7 @@ public class GameManagerImpl implements GameManager {
         }
         return false;
     }
-    public boolean contrasenyaCorrecte(String nomusuari, String contrasenya) {
+    public boolean contrasenyaCorrecte(String nomusuari, String password) {
         Usuari usuari = obtenirUsuariPerNomusuari(nomusuari);
 
         if (usuari == null) {
@@ -82,17 +84,17 @@ public class GameManagerImpl implements GameManager {
         }
 
         // Comparar la contraseña proporcionada con la contraseña almacenada para el usuario
-        return usuari.getContrasenya().equals(contrasenya);
+        return usuari.getPassword().equals(password);
     }
 
     @Override
-    public void login(String nomusuari, String contrasenya) throws UserNotFoundException, IncorrectPasswordException {
+    public void login(String nomusuari, String password) throws UserNotFoundException, IncorrectPasswordException {
         // Lógica para buscar el usuario en tu sistema
         // Si el usuario no se encuentra, lanza la excepción
         if (!usuariExisteix(nomusuari)) {
             throw new UserNotFoundException("L'usuari no existeix" + nomusuari);
         }
-        if (!contrasenyaCorrecte(nomusuari, contrasenya)){
+        if (!contrasenyaCorrecte(nomusuari, password)){
             throw new IncorrectPasswordException("Contrasenya incorrecte");
         }
         else{
@@ -101,10 +103,10 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public List<Item> llistarItemsPerPreuAscendent() {
+    public List<Botiga> llistarItemsPerPreuAscendent() {
         logger.info("Llistem els ítems de la botiga per ordre de preu ascendent");
-        List<Item> itemsOrdenats = new ArrayList<>(items);
-        Comparator<Item> comparadorAscendent = Comparator.comparingInt(Item::getPreu);
+        List<Botiga> itemsOrdenats = new ArrayList<>(items);
+        Comparator<Botiga> comparadorAscendent = Comparator.comparingInt(Botiga::getPreu);
         Collections.sort(itemsOrdenats, comparadorAscendent);
         logger.info("Items ordenats correctament");
         return itemsOrdenats;
@@ -121,7 +123,7 @@ public class GameManagerImpl implements GameManager {
         this.usuaris.remove(t);
     }
 
-    public Item addItem(Item i) {
+    public Botiga addItem(Botiga i) {
         logger.info("nou item " + i);
 
         this.items.add (i);
@@ -129,15 +131,15 @@ public class GameManagerImpl implements GameManager {
         return i;
     }
 
-    public Item addItem(String color, int preu) {
-        return this.addItem(new Item(color, preu));
+    public Botiga addItem(String color, int preu, String descripcio, BufferedImage imatge) {
+        return this.addItem(new Botiga(color, preu, descripcio, imatge));
     }
 
     @Override
-    public Item getItem(String color, int preu) {
+    public Botiga getItem(String color, int preu, String descripcio, BufferedImage imatge) {
         logger.info("getItem(" + color + ")");
 
-        for (Item i : this.items) {
+        for (Botiga i : this.items) {
             if (i.getColor().equalsIgnoreCase(color)) { // Usamos equalsIgnoreCase para ignorar diferencias de mayúsculas/minúsculas
                 logger.info("getItem(" + color + "): " + i);
                 return i;

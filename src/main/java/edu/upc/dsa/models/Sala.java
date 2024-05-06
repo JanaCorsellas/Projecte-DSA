@@ -3,10 +3,12 @@ package edu.upc.dsa.models;
 public class Sala {
     String id;
     int numeroSala;
+    boolean estatPorta; //false vol dir tancada, true oberta
 
     public Sala (String id, int numeroSala){
         this.id = id;
         this.numeroSala = numeroSala;
+        this.estatPorta = false;
     }
 
     public String getId(){

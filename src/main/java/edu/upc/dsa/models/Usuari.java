@@ -6,14 +6,16 @@ public class Usuari {
     String nom;
     String cognom;
     String nomusuari;
-    String contrasenya;
+    String password;
+    boolean clau;
 
     public Usuari(){}
-    public Usuari(String nom, String cognom, String nomusuari, String contrasenya) {
+    public Usuari(String nom, String cognom, String nomusuari, String password) {
         this.nom = nom;
         this.cognom = cognom;
         this.nomusuari = nomusuari;
-        this.contrasenya = contrasenya;
+        this.password = password;
+        this.clau = false;
     }
     public String getNom() {
         return nom;
@@ -39,12 +41,20 @@ public class Usuari {
         this.nomusuari = nomusuari;
     }
 
-    public String getContrasenya() {
-        return contrasenya;
+    public String getPassword() {
+        return password;
     }
 
-    public void setContrasenya(String contrasenya) {
-        this.contrasenya = contrasenya;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Boolean getClau() {
+        return clau;
+    }
+
+    public void setClau(Boolean clau) {
+        this.clau = false;
     }
 
     @Override

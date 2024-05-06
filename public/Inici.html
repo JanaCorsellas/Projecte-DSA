@@ -95,7 +95,7 @@
   <div class="container">
     <div class="navbar-header">
       <ul class="nav navbar-nav navbar-left">
-        <li><a id="info_button" href="#about">HISTÒRIA</a></li>
+        <li><a id="historia_button" href="#about">HISTÒRIA</a></li>
         <li><a id="botiga_button" href="#">BOTIGA</a></li>
         <li><a id="usuaris" href="#" onclick="mostrarListaUsuarios()">USUARIS</a></li>
       </ul>
@@ -119,6 +119,8 @@
           <tr>
             <th>Color skin</th>
             <th>Preu</th>
+            <th>Descripció</th>
+            <th>Imatge</th>
           </tr>
           </thead>
           <tbody>
@@ -160,8 +162,8 @@
 </body>
 <script>
     $(document).ready(function() {
-    // Mostrar modal principal cuando se hace clic en INFO
-    $("#info_button").click(function() {
+    // Mostrar modal principal cuando se hace clic en HISTORIA
+    $("#historia_button").click(function() {
         $("#myModal").show();
     });
 
@@ -184,13 +186,18 @@
             $("#tabla-productos tbody").empty();
             // Recorrer la lista de productos y agregar cada uno a la tabla
             data.forEach(function(item) {
-                $("#tabla-productos tbody").append(
-                    "<tr>" +
-                    "<td>" + item.color + "</td>" +
-                    "<td>" + item.preu + "</td>" +
-                    "</tr>"
-                );
-            });
+            // Crear un elemento de imagen con la URL del ítem
+            var img = $("<img>").attr("src", item.imatge).attr("alt", "Imatge de l'ítem");
+            // Crear una fila de tabla y agregar celdas con los datos del ítem
+            var row = $("<tr>").append(
+                $("<td>").text(item.color),
+                $("<td>").text(item.preu),
+                $("<td>").text(item.descripcio),
+                $("<td>").append(img) // Agregar la imagen como contenido de la celda
+            );
+            // Agregar la fila a la tabla
+            $("#tabla-productos tbody").append(row);
+        });
         });
         $("#myModal2").show();
     });
@@ -228,11 +235,11 @@
     });
     $("#endavant").click(function(event) {
         const nomusuari = $("#nomusuari").val();
-        const contrasenya = $("#password").val();
-        if (nomusuari !== "" && contrasenya !== ""){
+        const password = $("#password").val();
+        if (nomusuari !== "" && password !== ""){
                 const datos = {
                     nomusuari: nomusuari,
-                    contrasenya: contrasenya
+                    password: password
                 };
 				$.ajax({
 					url: "/dsaApp/usuaris/login",

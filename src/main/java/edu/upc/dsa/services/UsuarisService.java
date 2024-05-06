@@ -6,7 +6,6 @@ import edu.upc.dsa.GameManagerImpl;
 import edu.upc.dsa.exception.IncorrectPasswordException;
 import edu.upc.dsa.exception.UserAlreadyExistsException;
 import edu.upc.dsa.exception.UserNotFoundException;
-import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
 import edu.upc.dsa.models.UsuariLogin;
 import io.swagger.annotations.Api;
@@ -45,7 +44,7 @@ public class UsuarisService {
     public Response registreUsuari(Usuari usuari){
         try {
             GameManager manager = GameManagerImpl.getInstance();
-            manager.registreUsuari(usuari.getNom(), usuari.getCognom(), usuari.getNomusuari(), usuari.getContrasenya());
+            manager.registreUsuari(usuari.getNom(), usuari.getCognom(), usuari.getNomusuari(), usuari.getPassword());
 
             return Response.status(201).entity(usuari).build();
         } catch (UserAlreadyExistsException e) {
@@ -68,7 +67,7 @@ public class UsuarisService {
     public Response login(UsuariLogin usuari) {
         GameManager manager = GameManagerImpl.getInstance();
         try {
-            manager.login(usuari.getNomusuari(), usuari.getContrasenya());
+            manager.login(usuari.getNomusuari(), usuari.getPassword());
             return Response.status(200).entity("Inici de sessió exitós").build();
         } catch (UserNotFoundException e) {
             return Response.status(401).entity("Nom d'usuari invàlid").build();
