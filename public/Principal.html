@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Principal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<style>
+body {
+    background-image: url('https://s1.1zoom.me/b5451/816/Hands_Prison_513765_2560x1440.jpg');
+    background-size: cover; /* Cubre toda el área del contenedor */
+    background-repeat: no-repeat; /* No repite la imagen */
+    background-attachment: fixed; /* Fija la imagen de fondo */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+
+.btn {
+    position: absolute; /* Establecer posición absoluta */
+    bottom: 20px; /* Distancia desde la parte inferior */
+    right: 20px; /* Distancia desde la derecha */
+    display: inline-block;
+    margin: 50px;
+    font-size: 30px;
+    cursor: pointer;
+    border: solid #000000;
+    border-radius: 15px;
+    background-color: #ffd700;
+    color: #000000;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #000000; /* Color de fondo cuando el ratón está sobre el botón */
+    color: #ffffff; /* Cambia el color del texto a blanco para mejorar la legibilidad */
+}
+
+.btn:active {
+  background-color: #333333; /* Color de fondo cuando se hace clic en el botón */
+  color: #ffffff; /* Cambia el color del texto a blanco para mejorar la legibilidad */
+
+}
+
+.container {
+display: flex;
+width: 100%;
+justify-content: left;
+align-items: center;
+}
+
+.profile {
+background-color: #f0f0f0;
+padding: 20px;
+border-radius: 10px;
+margin-top: 50px;
+width: 450px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-info {
+margin-bottom: 20px;
+}
+
+.user-info h2 {
+margin-top: 0;
+font-family: Arial, sans-serif; /* Utiliza la misma fuente que otros elementos */
+font-size: 16px; /* Utiliza el mismo tamaño de fuente que otros elementos */
+font-weight: bold; /* Utiliza la misma negrita que otros elementos */
+}
+
+.user-info p {
+margin-bottom: 5px;
+}
+
+
+#nomusuari {
+font-family: Arial, sans-serif; /* Utiliza la misma fuente que otros elementos */
+font-size: 30px; /* Utiliza el mismo tamaño de fuente que otros elementos */
+font-weight: bold; /* Utiliza la misma negrita que otros elementos */
+}
+</style>
+
+<body>
+<div class="container">
+    <div class="profile">
+        <div class="user-info">
+            <h2><strong>Hola, </strong><span id="nomusuari"></span><strong> !</strong></h2>
+            <br>
+            <p><strong>Nom: </strong><span id="nom"></span></p>
+            <p><strong>Cognom: </strong><span id="cognom">-</span></p>
+            <br>
+            <p><strong>Diners:</strong>...</p>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="btn">INICIAR PARTIDA</div>
+
+<script>
+    // Recuperar del almacenamiento local
+    var nomusuari = localStorage.getItem('nomusuari');
+    var nom = localStorage.getItem('nom');
+    var cognom = localStorage.getItem('cognom');
+
+    document.getElementById('nomusuari').textContent = nomusuari;
+    document.getElementById('nom').textContent = nom;
+    document.getElementById('cognom').textContent = cognom;
+
+</script>
+
+</body>
+</html>
+

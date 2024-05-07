@@ -10,6 +10,9 @@
   <style>
         body {
             background-image: url('/portada1.jpg');
+            background-size: cover; /* Cubre toda el área del contenedor */
+            background-repeat: no-repeat; /* No repite la imagen */
+            background-attachment: fixed; /* Fija la imagen de fondo */
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -248,8 +251,12 @@
 		    dataType: "json",
 		    success: function (data) {
                 alert("Inici de sessió exitós");
-                window.location.href = "/Index.html";
+                localStorage.setItem('nomusuari', nomusuari);
+                localStorage.setItem('nom', localStorage.getItem('nom'));
+                localStorage.setItem('cognom', localStorage.getItem('cognom'));
+                window.location.href = "/Principal.html";
             },
+
             error: function(xhr, status, error) {
                 if(xhr.status === 409) {
                     alert("Error: Usuari no registrat");
