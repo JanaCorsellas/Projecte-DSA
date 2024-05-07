@@ -1,20 +1,28 @@
 package edu.upc.dsa.models;
+import edu.upc.dsa.util.RandomUtils;
 
-public class Botiga { //de moment els ítems seran skins de diferents colors
+public class Productes { //de moment els ítems seran skins de diferents colors
+    String id;
     String color;
     int preu;
     String descripcio;
     String imatge;
+    static int lastId;
 
-
-    public Botiga() {}
-    public Botiga(String color, int preu, String descripcio, String imatge){
+    public Productes() {}
+    public Productes(String color, int preu, String descripcio, String imatge){
         this.color = color;
         this.preu = preu;
         this.descripcio = descripcio;
         this.imatge = imatge;
     }
 
+    public String getId() {
+        return this.id;
+    }
+    public void setId(String id) {
+        this.id=id;
+    }
     public String getColor(){
         return color;
     }

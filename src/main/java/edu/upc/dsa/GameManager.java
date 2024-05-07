@@ -4,7 +4,7 @@ import edu.upc.dsa.exception.IncorrectPasswordException;
 import edu.upc.dsa.exception.MissingDataException;
 import edu.upc.dsa.exception.UserAlreadyExistsException;
 import edu.upc.dsa.exception.UserNotFoundException;
-import edu.upc.dsa.models.Botiga;
+import edu.upc.dsa.models.Productes;
 import edu.upc.dsa.models.Usuari;
 
 
@@ -17,14 +17,14 @@ public interface GameManager {
     public List<Usuari> llistaUsuaris();
     public boolean usuariExisteix(String nomUsuari);
     void login(String nomusuari, String password) throws UserNotFoundException, IncorrectPasswordException, MissingDataException;
-    public List<Botiga> llistarItemsPerPreuAscendent();
+    public List<Productes> llistarItemsPerPreuAscendent();
 
     //mètodes extres
     public void deleteUsuari(String id);
-    public Botiga addItem(Botiga i);
-    public Botiga addItem(String color, int preu, String descripcio, String imatge);
-    public Botiga getItem(String color, int preu, String descripcio, String imatge);
-    public List<Botiga> findAll();
+    public Productes addItem(Productes i);
+    public Productes addItem(String color, int preu, String descripcio, String imatge);
+    public Productes getItem(String color, int preu, String descripcio, String imatge);
+    public List<Productes> findAll();
     public int size();
 
 }

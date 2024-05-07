@@ -2,20 +2,16 @@ package edu.upc.dsa.services;
 
 import edu.upc.dsa.GameManager;
 import edu.upc.dsa.GameManagerImpl;
-import edu.upc.dsa.models.Botiga;
+import edu.upc.dsa.models.Productes;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-import javax.imageio.ImageIO;
 import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 @Api(value = "/items", description = "Endpoint to Item Service")
@@ -82,18 +78,18 @@ public class ItemsService {
     @GET
     @ApiOperation(value = "Obtenir una llista de tots els items", notes = "items de la botiga")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful", response = Botiga.class, responseContainer="List"),
+            @ApiResponse(code = 201, message = "Successful", response = Productes.class, responseContainer="List"),
     })
     @Path("/llista")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getItems() {
 
-        List<Botiga> items = this.um.findAll();
+        List<Productes> items = this.um.findAll();
         /*for (Botiga item : items) {
             BufferedImage imatge = cargarImagenDesdeURL(String.valueOf(item.getImatge()));
             item.setImatge(imatge);
         }*/
-        GenericEntity<List<Botiga>> entity = new GenericEntity<List<Botiga>>(items) {};
+        GenericEntity<List<Productes>> entity = new GenericEntity<List<Productes>>(items) {};
         return Response.status(201).entity(entity).build()  ;
     }
 
@@ -110,7 +106,7 @@ public class ItemsService {
     @GET
     @ApiOperation(value = "Llistar items per preu ascendent", notes = "llista dels ítems")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Exitós", response = Botiga.class, responseContainer = "List"),
+            @ApiResponse(code = 200, message = "Exitós", response = Productes.class, responseContainer = "List"),
             @ApiResponse(code = 500, message = "Error intern del servidor")
     })
     @Path("/llistarItems")
@@ -120,7 +116,7 @@ public class ItemsService {
 
         try {
             //obtenir la llista d'ítems odrenats per preu
-            List<Botiga> itemsOrdenats = manager.llistarItemsPerPreuAscendent();
+            List<Productes> itemsOrdenats = manager.llistarItemsPerPreuAscendent();
             return Response.status(200).entity(itemsOrdenats).build();
 
         } catch (Exception e) {

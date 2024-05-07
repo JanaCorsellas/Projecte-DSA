@@ -4,11 +4,9 @@ import edu.upc.dsa.exception.IncorrectPasswordException;
 import edu.upc.dsa.exception.MissingDataException;
 import edu.upc.dsa.exception.UserAlreadyExistsException;
 import edu.upc.dsa.exception.UserNotFoundException;
-import edu.upc.dsa.models.Botiga;
+import edu.upc.dsa.models.Productes;
 import edu.upc.dsa.models.Usuari;
 
-import java.awt.image.BufferedImage;
-import java.nio.Buffer;
 import java.util.*;
 
 import org.apache.log4j.Logger;
@@ -16,7 +14,7 @@ import org.apache.log4j.Logger;
 public class GameManagerImpl implements GameManager {
     private static GameManager instance;
     protected List<Usuari> usuaris;
-    protected List<Botiga> items;
+    protected List<Productes> items;
     final static Logger logger = Logger.getLogger(GameManagerImpl.class);
 
     private GameManagerImpl() {
@@ -46,7 +44,7 @@ public class GameManagerImpl implements GameManager {
         return null;
     }
 
-    public List<Botiga> findAll() {
+    public List<Productes> findAll() {
         return this.items;
     }
 
@@ -114,10 +112,10 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public List<Botiga> llistarItemsPerPreuAscendent() {
+    public List<Productes> llistarItemsPerPreuAscendent() {
         logger.info("Llistem els ítems de la botiga per ordre de preu ascendent");
-        List<Botiga> itemsOrdenats = new ArrayList<>(items);
-        Comparator<Botiga> comparadorAscendent = Comparator.comparingInt(Botiga::getPreu);
+        List<Productes> itemsOrdenats = new ArrayList<>(items);
+        Comparator<Productes> comparadorAscendent = Comparator.comparingInt(Productes::getPreu);
         Collections.sort(itemsOrdenats, comparadorAscendent);
         logger.info("Items ordenats correctament");
         return itemsOrdenats;
@@ -134,7 +132,7 @@ public class GameManagerImpl implements GameManager {
         this.usuaris.remove(t);
     }
 
-    public Botiga addItem(Botiga i) {
+    public Productes addItem(Productes i) {
         logger.info("nou item " + i);
 
         this.items.add (i);
@@ -142,15 +140,15 @@ public class GameManagerImpl implements GameManager {
         return i;
     }
 
-    public Botiga addItem(String color, int preu, String descripcio, String imatge) {
-        return this.addItem(new Botiga(color, preu, descripcio, imatge));
+    public Productes addItem(String color, int preu, String descripcio, String imatge) {
+        return this.addItem(new Productes(color, preu, descripcio, imatge));
     }
 
     @Override
-    public Botiga getItem(String color, int preu, String descripcio, String imatge) {
+    public Productes getItem(String color, int preu, String descripcio, String imatge) {
         logger.info("getItem(" + color + ")");
 
-        for (Botiga i : this.items) {
+        for (Productes i : this.items) {
             if (i.getColor().equalsIgnoreCase(color)) { // Usamos equalsIgnoreCase para ignorar diferencias de mayúsculas/minúsculas
                 logger.info("getItem(" + color + "): " + i);
                 return i;
