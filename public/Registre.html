@@ -111,6 +111,9 @@
                 dataType: "json",
                 success: function (data) {
                     alert("Usuari registrat correctament");
+                    //var nom = data.nom
+                    localStorage.setItem('nom', nom);
+                    localStorage.setItem('cognom', cognom);
                     window.location.href = "/Inici.html";
                 },
                 error: function(xhr, status, error) {
