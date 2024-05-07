@@ -15,7 +15,7 @@ public class UsuarisServiceTest {
     }
     @Test
     public void testaddUsuari() throws Exception {
-        um.registreUsuari("jordi", "gual", "jgual01", "1234");
+        um.registreUsuari("jordi", "gual", "jgual01", "1234", "1234");
         assertNotNull(um.obtenirUsuariPerNomusuari("jgual01"));
     }
 

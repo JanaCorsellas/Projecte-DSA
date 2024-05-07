@@ -4,6 +4,7 @@ package edu.upc.dsa.services;
 import edu.upc.dsa.GameManager;
 import edu.upc.dsa.GameManagerImpl;
 import edu.upc.dsa.exception.IncorrectPasswordException;
+import edu.upc.dsa.exception.MissingDataException;
 import edu.upc.dsa.exception.UserAlreadyExistsException;
 import edu.upc.dsa.exception.UserNotFoundException;
 import edu.upc.dsa.models.Usuari;
@@ -34,6 +35,8 @@ public class UsuarisService {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Exitós", response= Usuari.class),
             @ApiResponse(code = 409, message = "El nom d'usuari ja existeix"),
+            @ApiResponse(code = 401, message = "La contrasenya no coincideix"),
+            @ApiResponse(code = 404, message = "Falta completar algun camp"),
             @ApiResponse(code = 500, message = "Error de validació")
 
     })
@@ -44,13 +47,17 @@ public class UsuarisService {
     public Response registreUsuari(Usuari usuari){
         try {
             GameManager manager = GameManagerImpl.getInstance();
-            manager.registreUsuari(usuari.getNom(), usuari.getCognom(), usuari.getNomusuari(), usuari.getPassword());
+            manager.registreUsuari(usuari.getNom(), usuari.getCognom(), usuari.getNomusuari(), usuari.getPassword(), usuari.getPassword2());
 
             return Response.status(201).entity(usuari).build();
         } catch (UserAlreadyExistsException e) {
-            return Response.status(409).entity("El nom d'usuari ja existeix").build();
+            return Response.status(409).entity(usuari).build();
+        } catch (IncorrectPasswordException e) {
+            return Response.status(401).entity(usuari).build();
+        } catch (MissingDataException e) {
+            return Response.status(404).entity(usuari).build();
         } catch (Exception e) {
-            return Response.status(500).entity("Error intern del servidor").build();
+            return Response.status(500).entity(usuari).build();
         }
     }
 
@@ -58,7 +65,9 @@ public class UsuarisService {
     @ApiOperation(value = "Iniciar sessió", notes = "Iniciar sessió amb usuari")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Exitós"),
-            @ApiResponse(code = 401, message = "Nom d'usuari incorrecte"),
+            @ApiResponse(code = 401, message = "Contrasenya incorrecte"),
+            @ApiResponse(code = 404, message = "Falta completar algun camp"),
+            @ApiResponse(code = 409, message = "Usuari no registrat"),
             @ApiResponse(code = 500, message = "Error intern del servidor")
     })
     @Path("/login")
@@ -68,13 +77,15 @@ public class UsuarisService {
         GameManager manager = GameManagerImpl.getInstance();
         try {
             manager.login(usuari.getNomusuari(), usuari.getPassword());
-            return Response.status(200).entity("Inici de sessió exitós").build();
+            return Response.status(200).entity(usuari).build();
         } catch (UserNotFoundException e) {
-            return Response.status(401).entity("Nom d'usuari invàlid").build();
+            return Response.status(409).entity(usuari).build();
+        } catch (MissingDataException e) {
+            return Response.status(404).entity(usuari).build();
         } catch (IncorrectPasswordException e) {
-            return Response.status(401).entity("Contrasenya incorrecte").build();
+            return Response.status(401).entity(usuari).build();
         } catch (Exception e) {
-            return Response.status(500).entity("Error intern del servidor").build();
+            return Response.status(500).entity(usuari).build();
         }
     }
 
@@ -91,5 +102,4 @@ public class UsuarisService {
         GenericEntity<List<Usuari>> entity = new GenericEntity<List<Usuari>>(usuaris) {};
         return Response.status(201).entity(entity).build()  ;
     }
-
 }

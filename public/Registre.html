@@ -70,6 +70,11 @@
             <input id="password" type="password" class="form-control" name="password" placeholder="Contrasenya">
         </div>
         <br>
+        <div class="input-group" style="width: 300px; margin:0 auto">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+            <input id="password2" type="password" class="form-control" name="password2" placeholder="Confirma la contrasenya">
+        </div>
+        <br>
 
         <div class="input-group" style="width: 300px; margin:0 auto">
             <div class="input-group-append">
@@ -87,12 +92,14 @@
             var cognom = $("#cognom").val();
             var nomusuari = $("#nomusuari").val();
             var password = $("#password").val();
+            var password2 = $("#password2").val();
 
             var datosUsuario = {
                 nom: nom,
                 cognom: cognom,
                 nomusuari: nomusuari,
-                password: password
+                password: password,
+                password2: password2
             };
 
             // Enviar los datos a través de AJAX
@@ -107,7 +114,15 @@
                     window.location.href = "/Inici.html";
                 },
                 error: function(xhr, status, error) {
-                    alert("Error, usuari ja registrat");
+                    if(xhr.status === 409) {
+                        alert("Error: El nom d'usuari ja existeix");
+                    } else if(xhr.status === 404) {
+                        alert("Error: Falten completar camps");
+                    } else if(xhr.status === 401) {
+                        alert("Error: La contrasenya no coincideix");
+                    } else {
+                        alert("Error desconegut: " + xhr.responseText);
+                    }
                 }
             });
         });

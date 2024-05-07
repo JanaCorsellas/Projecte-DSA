@@ -7,14 +7,16 @@ public class Usuari {
     String cognom;
     String nomusuari;
     String password;
+    String password2;
     boolean clau;
 
     public Usuari(){}
-    public Usuari(String nom, String cognom, String nomusuari, String password) {
+    public Usuari(String nom, String cognom, String nomusuari, String password, String password2) {
         this.nom = nom;
         this.cognom = cognom;
         this.nomusuari = nomusuari;
         this.password = password;
+        this.password2 = password2;
         this.clau = false;
     }
     public String getNom() {
@@ -47,6 +49,14 @@ public class Usuari {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPassword2() {
+        return password2;
+    }
+
+    public void setPassword2(String password2) {
+        this.password2 = password2;
     }
 
     public Boolean getClau() {

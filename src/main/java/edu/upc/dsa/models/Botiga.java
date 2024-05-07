@@ -1,16 +1,14 @@
 package edu.upc.dsa.models;
 
-import java.awt.image.BufferedImage;
-
 public class Botiga { //de moment els ítems seran skins de diferents colors
     String color;
     int preu;
     String descripcio;
-    BufferedImage imatge;
+    String imatge;
 
 
     public Botiga() {}
-    public Botiga(String color, int preu, String descripcio, BufferedImage imatge){
+    public Botiga(String color, int preu, String descripcio, String imatge){
         this.color = color;
         this.preu = preu;
         this.descripcio = descripcio;
@@ -38,10 +36,10 @@ public class Botiga { //de moment els ítems seran skins de diferents colors
         this.descripcio = descripcio;
     }
 
-    public BufferedImage getImatge() {
+    public String getImatge() {
         return imatge;
     }
-    public void setImatge(BufferedImage imatge) {
+    public void setImatge(String imatge) {
         this.imatge = imatge;
     }
 }

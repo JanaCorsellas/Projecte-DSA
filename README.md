@@ -1,4 +1,6 @@
-versió 4
+versió 5
+
+He afegit alguns paràmetres i algunes excepcions. Ja funciona tot.
 
 Backend:
 - login
@@ -8,5 +10,5 @@ Backend:
 
 Pàgina Web:
 - registre correcte
+- login correcte
 - llista de productes correcte
-- error: no es pot iniciar sessió amb un usuari acabat de registrar!

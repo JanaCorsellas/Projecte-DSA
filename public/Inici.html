@@ -1,3 +1,283 @@
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <title>Scaperoom</title>
+  <style>
+        body {
+            background-image: url('/portada1.jpg');
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: MediumSeaGreen;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .modal {
+          display: none; /* Ocultar el modal por defecto */
+          position: fixed; /* Posición fija */
+          z-index: 1; /* Ubicar el modal encima de todo */
+          left: 0;
+          top: 0;
+          width: 100%; /* Ancho completo */
+          height: 100%; /* Altura completa */
+          overflow: auto; /* Hacer el modal desplazable si es necesario */
+          background-color: rgba(0,0,0,0.4); /* Fondo oscuro */
+        }
+        .modal-content {
+          background-image: url('/cartaa.avif');
+          background-size: cover;
+          max-width: 600px;
+          margin: 11px auto 0;
+          border: 1px solid rgba(0, 0, 0, 0.5);
+          border-radius: 10px;
+          padding: 20px;
+          font-family: 'Old Standard TT', serif;
+        }
+        .modal-content p {
+          font-size: 29px;
+          font-family: 'Brush Script MT';
+          line-height: 1.5;
+        }
+
+        .close {
+          color: #aaa;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+          color: black;
+          text-decoration: none;
+          cursor: pointer;
+        }
+        #tabla-productos td {
+            text-align: left; /* Alinea todo el texto a la izquierda */
+        }
+        #tabla-productos th {
+            font-size: 18px; /* Cambia el tamaño de la fuente */
+        }
+
+
+    </style>
+</head>
+<body>
+<nav style = "background-color:black" class="navbar navbar-default navbar-fixed-bottom">
+  <div class="container">
+    <div class="navbar-header">
+      <ul class="nav navbar-nav navbar-left">
+        <li><a id="historia_button" href="#about">HISTÒRIA</a></li>
+        <li><a id="botiga_button" href="#">BOTIGA</a></li>
+        <li><a id="usuaris" href="#" onclick="mostrarListaUsuarios()">USUARIS</a></li>
+      </ul>
+    </div>
+    <ul id="llista-usuaris"></ul>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>La presó de la Eetac es va inaugurar el 2008 com un dels centres penitenciaris més segurs i blindats d'Europa. La seva tecnologia tan avançada i el seu sistema de vigilància basat en sensors i càmeres d'intel·ligència artificial han permès que en els seus 15 anys d'història no s'hagi contabilitzat cap intent de fugida.</p>
+        <p>Un historial impecable que també es deu a la recta disciplina a base de mètodes poc ortodoxos i una alta professionalitat del personal tècnic que hi treballa. La llegenda diu que qui intenta fugir de les parets de la Presó de l'Eetac no surt amb vida però sempre hi pot haver un primer o primera.</p>
+        <p>T'atreveixes a provar-ho?</p>
+        <p>Posa a prova les teves habilitats i estratègies.</p>
+      </div>
+    </div>
+    <div id="myModal2" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="cerrarModal('myModal2')">&times;</span>
+        <h2>BOTIGA</h2>
+        <table id="tabla-productos" class="table">
+          <thead>
+          <tr>
+            <th>Color skin</th>
+            <th>Preu</th>
+            <th>Descripció</th>
+            <th>Imatge</th>
+          </tr>
+          </thead>
+          <tbody>
+          Aquí se mostrarán los productos
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div id="myModal3" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="cerrarModal('myModal3')">&times;</span>
+        <h2>Iniciar Sessió</h2>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="nomusuari">Nom d'usuari:</label>
+            <input type="text" class="form-control" id="nomusuari" name="nomusuari">
+          </div>
+          <div class="form-group">
+            <label for="password">Contrasenya:</label>
+            <input type="password" class="form-control" id="password" name="password">
+          </div>
+          <button id="endavant" type="button" class="btn btn-primary">Iniciar Sessió</button>
+        </form>
+      </div>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">EL MEU PERFIL <span class="caret"></span></a>
+          <ul class="dropdown-menu d-flex flex-column">
+            <li class="custom-row-margin"><button id="inicio_button" type="button" class="btn btn-block w-100 h-100" onclick="mostrarModal('myModal3')">Iniciar sessió</button></li>
+            <li class="custom-row-margin"><button id="regis_button" type="button" class="btn btn-block w-100 h-100">Registrar-se</button></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+</body>
+<script>
+    $(document).ready(function() {
+    // Mostrar modal principal cuando se hace clic en HISTORIA
+    $("#historia_button").click(function() {
+        $("#myModal").show();
+    });
+
+    // Cerrar modal principal cuando se hace clic en la cruz
+    $(".close").click(function() {
+        $("#myModal").hide();
+    });
+
+    // Cerrar modal principal cuando se hace clic fuera de él
+    $(window).click(function(event) {
+        if (event.target === $("#myModal")[0]) {
+            $("#myModal").hide();
+        }
+    });
+
+    // Mostrar modal de la botiga cuando se hace clic en BOTIGA
+    $("#botiga_button").click(function() {
+        $.get("/dsaApp/items/llista", function(data) {
+            // Limpiar la tabla de productos
+            $("#tabla-productos tbody").empty();
+            // Recorrer la lista de productos y agregar cada uno a la tabla
+            data.forEach(function(item) {
+            // Crear un elemento de imagen con la URL del ítem
+            var img = $("<img>").attr("src", item.imatge).attr("alt", "Imatge de l'ítem");
+            // Crear una fila de tabla y agregar celdas con los datos del ítem
+            var row = $("<tr>").append(
+                $("<td>").text(item.color),
+                $("<td>").text(item.preu),
+                $("<td>").text(item.descripcio),
+                $("<td>").append(img) // Agregar la imagen como contenido de la celda
+            );
+            // Agregar la fila a la tabla
+            $("#tabla-productos tbody").append(row);
+        });
+        });
+        $("#myModal2").show();
+    });
+
+    // Cerrar modal de la botiga cuando se hace clic en la cruz
+    $("#myModal2 .close").click(function() {
+        $("#myModal2").hide();
+    });
+
+    // Cerrar modal de la botiga cuando se hace clic fuera de él
+    $(window).click(function(event) {
+        if (event.target === $("#myModal2")[0]) {
+            $("#myModal2").hide();
+        }
+    });
+
+    // Redireccionar a la página de inicio de sesión cuando se hace clic en Iniciar sesión
+    $("#inicio_button").click(function(event) {
+        $("#myModal3").show();
+    });
+
+    $("#myModal3 .close").click(function() {
+        $("#myModal3").hide();
+    });
+
+    $(window).click(function(event) {
+        if (event.target === $("#myModal3")[0]) {
+            $("#myModal3").hide();
+        }
+    });
+
+    // Redireccionar a la página de registro cuando se hace clic en Registrarse
+    $("#regis_button").click(function(event) {
+        window.location.href = "/Registre.html";
+    });
+    $("#endavant").click(function(event) {
+        const nomusuari = $("#nomusuari").val();
+        const password = $("#password").val();
+        const datos = {
+              nomusuari: nomusuari,
+              password: password
+        };
+	    $.ajax({
+		  url: "/dsaApp/usuaris/login",
+		  method: "POST",
+		  contentType: "application/json",
+		  data: JSON.stringify(datos),
+		  dataType: "json",
+		  error: function (){
+			  alert("Usuari incorrecte");
+		  }
+		  success: function (data) {
+              alert("Inici de sessió exitós");
+              window.location.href = "/Index.html";
+          },
+          error: function(xhr, status, error) {
+              if(xhr.status === 409) {
+                   alert("Error: Nom d'usuari incorrecte");
+              } else if(xhr.status === 401) {
+                   alert("Error: Contrasenya no coincideix amb l'usuari");
+              } else {
+                   alert("Error desconegut: " + xhr.responseText);
+              }
+          }
+	    });
+    }
+    function mostrarListaUsuarios() {
+        $.get("/dsaApp/usuaris/llistaUsuaris", function(data) {
+            // Limpiar la lista de usuarios antes de agregar los nuevos
+            $("#llista-usuaris").empty();
+
+            data.forEach(function(usuari) {
+                $("#llista-usuaris").append("<li>" + usuari.nomusuari + "</li>");
+            }
+        }
+    }
+});
+</script>
+</html>-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -236,28 +516,32 @@
     $("#endavant").click(function(event) {
         const nomusuari = $("#nomusuari").val();
         const password = $("#password").val();
-        if (nomusuari !== "" && password !== ""){
-                const datos = {
-                    nomusuari: nomusuari,
-                    password: password
-                };
-				$.ajax({
-					url: "/dsaApp/usuaris/login",
-					method: "POST",
-					contentType: "application/json",
-					data: JSON.stringify(datos),
-					dataType: "json",
-					success: function (data){
-						console.log("Inici de sessió exitós");
-					},
-					error: function (){
-						alert("Usuari incorrecte");
-					}
-				});
-			}
-			else {
-				alert("Si us plau, completa tots els camps");
-			}
+        const datos = {
+            nomusuari: nomusuari,
+            password: password
+        }
+        $.ajax({
+		    url: "/dsaApp/usuaris/login",
+		    method: "POST",
+		    contentType: "application/json",
+		    data: JSON.stringify(datos),
+		    dataType: "json",
+		    success: function (data) {
+                alert("Inici de sessió exitós");
+                window.location.href = "/Index.html";
+            },
+            error: function(xhr, status, error) {
+                if(xhr.status === 409) {
+                    alert("Error: Usuari no registrat");
+                } else if(xhr.status === 404) {
+                    alert("Error: Cal completar tots els camps");
+                } else if(xhr.status === 401) {
+                    alert("Error: Contrasenya incorrecte");
+                } else {
+                    alert("Error desconegut: " + xhr.responseText);
+                }
+            }
+	    });
     });
     function mostrarListaUsuarios() {
         $.get("/dsaApp/usuaris/llistaUsuaris", function(data) {

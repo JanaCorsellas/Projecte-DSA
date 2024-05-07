@@ -1,6 +1,7 @@
 package edu.upc.dsa;
 
 import edu.upc.dsa.exception.IncorrectPasswordException;
+import edu.upc.dsa.exception.MissingDataException;
 import edu.upc.dsa.exception.UserAlreadyExistsException;
 import edu.upc.dsa.exception.UserNotFoundException;
 import edu.upc.dsa.models.Botiga;
@@ -50,16 +51,23 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public void registreUsuari(String nom, String cognom, String nomusuari, String password) throws UserAlreadyExistsException {
+    public void registreUsuari(String nom, String cognom, String nomusuari, String password, String password2) throws UserAlreadyExistsException, IncorrectPasswordException, MissingDataException {
         for (Usuari usuari : usuaris) {
             if (usuari.getNomusuari().equals(nomusuari)) {
                 throw new UserAlreadyExistsException("Aquest nom d'usuari ja existeix: " + nomusuari);
             }
         }
-
-        // Si el nombre de usuario no está en uso, registra el usuario
-        Usuari usuari = new Usuari(nom, cognom, nomusuari, password);
-        this.usuaris.add(usuari);
+        if(nom == "" || cognom == "" || nomusuari == "" || password == "" || password2 == ""){
+            throw new MissingDataException("Falten camps per completar");
+        }
+        else if (!Objects.equals(password, password2)){
+            throw new IncorrectPasswordException("La contrasenya no coincideix");
+        }
+        else{
+            // Si el nombre de usuario no está en uso, registra el usuario
+            Usuari usuari = new Usuari(nom, cognom, nomusuari, password, password2);
+            this.usuaris.add(usuari);
+        }
     }
     @Override
     public List<Usuari> llistaUsuaris() {
@@ -88,7 +96,7 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public void login(String nomusuari, String password) throws UserNotFoundException, IncorrectPasswordException {
+    public void login(String nomusuari, String password) throws UserNotFoundException, IncorrectPasswordException, MissingDataException {
         // Lógica para buscar el usuario en tu sistema
         // Si el usuario no se encuentra, lanza la excepción
         if (!usuariExisteix(nomusuari)) {
@@ -96,6 +104,9 @@ public class GameManagerImpl implements GameManager {
         }
         if (!contrasenyaCorrecte(nomusuari, password)){
             throw new IncorrectPasswordException("Contrasenya incorrecte");
+        }
+        if (nomusuari == "" || password == ""){
+            throw new MissingDataException("Completa tots els camps");
         }
         else{
             logger.info("Has iniciat sessió");
@@ -131,12 +142,12 @@ public class GameManagerImpl implements GameManager {
         return i;
     }
 
-    public Botiga addItem(String color, int preu, String descripcio, BufferedImage imatge) {
+    public Botiga addItem(String color, int preu, String descripcio, String imatge) {
         return this.addItem(new Botiga(color, preu, descripcio, imatge));
     }
 
     @Override
-    public Botiga getItem(String color, int preu, String descripcio, BufferedImage imatge) {
+    public Botiga getItem(String color, int preu, String descripcio, String imatge) {
         logger.info("getItem(" + color + ")");
 
         for (Botiga i : this.items) {
