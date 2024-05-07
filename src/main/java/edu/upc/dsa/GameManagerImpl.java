@@ -4,7 +4,7 @@ import edu.upc.dsa.exception.IncorrectPasswordException;
 import edu.upc.dsa.exception.MissingDataException;
 import edu.upc.dsa.exception.UserAlreadyExistsException;
 import edu.upc.dsa.exception.UserNotFoundException;
-import edu.upc.dsa.models.Productes;
+import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
 
 import java.util.*;
@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 public class GameManagerImpl implements GameManager {
     private static GameManager instance;
     protected List<Usuari> usuaris;
-    protected List<Productes> items;
+    protected List<Item> items;
     final static Logger logger = Logger.getLogger(GameManagerImpl.class);
 
     private GameManagerImpl() {
@@ -44,7 +44,7 @@ public class GameManagerImpl implements GameManager {
         return null;
     }
 
-    public List<Productes> findAll() {
+    public List<Item> findAll() {
         return this.items;
     }
 
@@ -112,13 +112,23 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public List<Productes> llistarItemsPerPreuAscendent() {
+    public List<Item> llistarItemsPerPreuAscendent() {
         logger.info("Llistem els ítems de la botiga per ordre de preu ascendent");
-        List<Productes> itemsOrdenats = new ArrayList<>(items);
-        Comparator<Productes> comparadorAscendent = Comparator.comparingInt(Productes::getPreu);
+        List<Item> itemsOrdenats = new ArrayList<>(items);
+        Comparator<Item> comparadorAscendent = Comparator.comparingInt(Item::getPreu);
         Collections.sort(itemsOrdenats, comparadorAscendent);
         logger.info("Items ordenats correctament");
         return itemsOrdenats;
+    }
+
+    @Override
+    public Item obtenirItemPerColor(String color) {
+        for (Item producte : items) {
+            if (producte.getColor().equals(producte)) {
+                return producte;
+            }
+        }
+        return null;
     }
 
     //mètodes extres
@@ -132,7 +142,7 @@ public class GameManagerImpl implements GameManager {
         this.usuaris.remove(t);
     }
 
-    public Productes addItem(Productes i) {
+    public Item addItem(Item i) {
         logger.info("nou item " + i);
 
         this.items.add (i);
@@ -140,15 +150,15 @@ public class GameManagerImpl implements GameManager {
         return i;
     }
 
-    public Productes addItem(String color, int preu, String descripcio, String imatge) {
-        return this.addItem(new Productes(color, preu, descripcio, imatge));
+    public Item addItem(String color, int preu, String descripcio, String imatge) {
+        return this.addItem(new Item(color, preu, descripcio, imatge));
     }
 
     @Override
-    public Productes getItem(String color, int preu, String descripcio, String imatge) {
+    public Item getItem(String color, int preu, String descripcio, String imatge) {
         logger.info("getItem(" + color + ")");
 
-        for (Productes i : this.items) {
+        for (Item i : this.items) {
             if (i.getColor().equalsIgnoreCase(color)) { // Usamos equalsIgnoreCase para ignorar diferencias de mayúsculas/minúsculas
                 logger.info("getItem(" + color + "): " + i);
                 return i;

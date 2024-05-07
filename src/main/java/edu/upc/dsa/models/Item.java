@@ -1,16 +1,14 @@
 package edu.upc.dsa.models;
-import edu.upc.dsa.util.RandomUtils;
 
-public class Productes { //de moment els ítems seran skins de diferents colors
+public class Item { //de moment els ítems seran skins de diferents colors
     String id;
     String color;
     int preu;
     String descripcio;
     String imatge;
-    static int lastId;
 
-    public Productes() {}
-    public Productes(String color, int preu, String descripcio, String imatge){
+    public Item() {}
+    public Item(String color, int preu, String descripcio, String imatge){
         this.color = color;
         this.preu = preu;
         this.descripcio = descripcio;

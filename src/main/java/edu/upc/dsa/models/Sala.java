@@ -24,12 +24,4 @@ public class Sala {
     public void setNumeroSala(int numeroSala){
         this.numeroSala = numeroSala;
     }
-
-    @Override
-    public String toString() {
-        return "Sala{" +
-                ", id='" + id + '\'' +
-                ", numeroSala=" + numeroSala +
-                '}';
-    }
 }

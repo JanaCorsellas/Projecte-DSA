@@ -1,19 +1,16 @@
 package edu.upc.dsa.models;
 
-import edu.upc.dsa.util.RandomUtils;
-
 public class Motxilla {
     String id;
     String idUsuari;
-    String idSkin;
-    static int lastId;
+    String idItem;
 
     public Motxilla(){
     }
 
-    public Motxilla(String idUsuari, String idSkin){
+    public Motxilla(String idUsuari, String idItem){
         this.idUsuari=idUsuari;
-        this.idSkin=idSkin;
+        this.idItem=idItem;
     }
     public String getId() {
         return this.id;
@@ -29,10 +26,10 @@ public class Motxilla {
         this.idUsuari=idUsuari;
     }
 
-    public String getSkin() {
-        return this.idSkin;
+    public String getIdItem() {
+        return this.idItem;
     }
-    public void setIdSkin(String idSkin) {
-        this.idSkin=idSkin;
+    public void setIdItem(String idItem) {
+        this.idItem=idItem;
     }
 }
