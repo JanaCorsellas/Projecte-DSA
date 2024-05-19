@@ -1,12 +1,14 @@
-versió 5
+versió 6
 
-He afegit alguns paràmetres i algunes excepcions. Ja funciona tot.
+He afegit al backend el servei per afegir ítems. (El d'eliminar encara no funciona)
 
 Backend:
 - login
 - registre
 - llistaUsuaris
 - llistaÍtems
+- addItem
+- delItem
 
 Pàgina Web:
 - registre correcte

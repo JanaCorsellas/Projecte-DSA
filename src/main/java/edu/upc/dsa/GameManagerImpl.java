@@ -1,9 +1,6 @@
 package edu.upc.dsa;
 
-import edu.upc.dsa.exception.IncorrectPasswordException;
-import edu.upc.dsa.exception.MissingDataException;
-import edu.upc.dsa.exception.UserAlreadyExistsException;
-import edu.upc.dsa.exception.UserNotFoundException;
+import edu.upc.dsa.exception.*;
 import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
 
@@ -142,16 +139,44 @@ public class GameManagerImpl implements GameManager {
         this.usuaris.remove(t);
     }
 
-    public Item addItem(Item i) {
-        logger.info("nou item " + i);
-
-        this.items.add (i);
-        logger.info("nou skin afegit");
-        return i;
+    @Override
+    public void addItem(String color, int preu, String descripcio, String imatge) throws MissingDataException, ItemAlreadyExistsException {
+        for (Item item : items) {
+            if (item.getColor().equals(color)) {
+                throw new ItemAlreadyExistsException("Aquesta skin ja existeix: " + color);
+            }
+        }
+        if(color == "" || preu < 0 || descripcio == "" || imatge == ""){
+            throw new MissingDataException("Falten camps per completar");
+        }
+        else{
+            // Si el nombre de usuario no está en uso, registra el usuario
+            Item item = new Item(color, preu, descripcio, imatge);
+            this.items.add(item);
+        }
     }
 
-    public Item addItem(String color, int preu, String descripcio, String imatge) {
-        return this.addItem(new Item(color, preu, descripcio, imatge));
+    @Override
+    public void delItem(String color, int preu, String descripcio, String imatge) throws MissingDataException, ItemNotFoundException{
+        if(color == null){
+            logger.info("Digues el color de la skin");
+            throw new MissingDataException("Cal completar els camps");
+        }
+        boolean itemFound = false;
+        Iterator<Item> iterator = this.items.iterator();
+
+        while (iterator.hasNext()) {
+            Item item = iterator.next();
+            if (item.getColor().equals(color)) {
+                iterator.remove();
+                itemFound = true;
+                break;
+            }
+        }
+
+        if (!itemFound) {
+            throw new ItemNotFoundException("No s'ha trobat cap item amb aquest color: " + color);
+        }
     }
 
     @Override

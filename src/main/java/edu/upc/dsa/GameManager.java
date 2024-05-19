@@ -1,9 +1,6 @@
 package edu.upc.dsa;
 
-import edu.upc.dsa.exception.IncorrectPasswordException;
-import edu.upc.dsa.exception.MissingDataException;
-import edu.upc.dsa.exception.UserAlreadyExistsException;
-import edu.upc.dsa.exception.UserNotFoundException;
+import edu.upc.dsa.exception.*;
 import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
 
@@ -23,8 +20,9 @@ public interface GameManager {
 
     //mètodes extres
     public void deleteUsuari(String id);
-    public Item addItem(Item i);
-    public Item addItem(String color, int preu, String descripcio, String imatge);
+    //public Item addItem(Item i) throws MissingDataException, ItemAlreadyExistsException;
+    public void addItem(String color, int preu, String descripcio, String imatge) throws MissingDataException, ItemAlreadyExistsException;
+    public void delItem(String color, int preu, String descripcio, String imatge) throws MissingDataException, ItemNotFoundException;
     public Item getItem(String color, int preu, String descripcio, String imatge);
     public List<Item> findAll();
     public int size();
