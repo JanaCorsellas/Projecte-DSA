@@ -76,27 +76,26 @@ public class ItemsService {
     @DELETE
     @ApiOperation(value = "Eliminar un ítem de la botiga", notes = "Operació per eliminar una skin de la botiga")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Exitós", response= Item.class),
-            @ApiResponse(code = 409, message = "Aquest color de skin no existeix"),
-            @ApiResponse(code = 404, message = "Falta completar algun camp"),
+            @ApiResponse(code = 200, message = "Exitós"),
+            @ApiResponse(code = 404, message = "No s'ha trobat cap item amb aquest color"),
             @ApiResponse(code = 500, message = "Error de validació")
 
     })
 
-    @Path("/eliminarItems")
+    @Path("/eliminarItems/{color}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delItem(Item item){
+    public Response delItem(@PathParam("color") String color){
         try {
             GameManager manager = GameManagerImpl.getInstance();
-            manager.delItem(item.getColor(),item.getPreu(), item.getDescripcio(), item.getImatge());
-            return Response.status(201).entity(item).build();
+            manager.delItem(color);
+            return Response.status(200).entity("Item amb color " + color + " eliminat correctament.").build();
         } catch (ItemNotFoundException e) {
-            return Response.status(409).entity(item).build();
+            return Response.status(404).entity("No s'ha trobat cap item amb aquest color: " + color).build();
         } catch (MissingDataException e) {
-            return Response.status(404).entity(item).build();
+            return Response.status(400).entity("Cal completar els camps").build();
         } catch (Exception e) {
-            return Response.status(500).entity(item).build();
+            return Response.status(500).entity("Error de validació").build();
         }
     }
 
