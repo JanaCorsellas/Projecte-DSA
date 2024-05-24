@@ -223,6 +223,24 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
+    public void delItem(String color) throws ItemNotFoundException, MissingDataException {
+        if (color == null || color.isEmpty()) {
+            throw new MissingDataException("Cal completar els camps");
+        }
+        boolean found = false;
+        for (Item item : items) {
+            if (item.getColor().equals(color)) {
+                items.remove(item);
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            throw new ItemNotFoundException("No s'ha trobat cap item amb aquest color: " + color);
+        }
+    }
+
+    @Override
     public void delItem(String color, int preu, String descripcio, String imatge) throws MissingDataException, ItemNotFoundException{
         if(color == null){
             logger.info("Digues el color de la skin");

@@ -100,10 +100,9 @@
       <ul class="nav navbar-nav navbar-left">
         <li><a id="historia_button" href="#about">HISTÒRIA</a></li>
         <li><a id="botiga_button" href="#">BOTIGA</a></li>
-        <li><a id="usuaris" href="#" onclick="mostrarListaUsuarios()">USUARIS</a></li>
+        <li><a id="usuaris_button" href="#">USUARIS</a></li>
       </ul>
     </div>
-    <ul id="llista-usuaris"></ul>
     <div id="myModal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
@@ -111,6 +110,22 @@
         <p>Un historial impecable que també es deu a la recta disciplina a base de mètodes poc ortodoxos i una alta professionalitat del personal tècnic que hi treballa. La llegenda diu que qui intenta fugir de les parets de la Presó de l'Eetac no surt amb vida però sempre hi pot haver un primer o primera.</p>
         <p>T'atreveixes a provar-ho?</p>
         <p>Posa a prova les teves habilitats i estratègies.</p>
+      </div>
+    </div>
+    <div id="myModal1" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="cerrarModal('myModal1')">&times;</span>
+        <h2>USUARIS</h2>
+        <table id="tabla-usuarios" class="table">
+          <thead>
+          <tr>
+            <th>Nom d'usuari</th>
+          </tr>
+          </thead>
+          <tbody>
+          <!-- Aquí se mostrarán los productos -->
+          </tbody>
+        </table>
       </div>
     </div>
     <div id="myModal2" class="modal">
@@ -181,7 +196,35 @@
             $("#myModal").hide();
         }
     });
+    // Mostrar modal de la usuaris cuando se hace clic en USUARIS
+    $("#usuaris_button").click(function() {
+        $.get("/dsaApp/usuaris/llistaUsuaris", function(data) {
+            // Limpiar la tabla de usuarios
+            $("#tabla-usuarios tbody").empty();
+            // Recorrer la lista de usuarios y agregar cada uno a la tabla
+            data.forEach(function(item) {
+            // Crear una fila de tabla y agregar celdas con los datos del ítem
+            var row = $("<tr>").append(
+                $("<td>").text(item.nomusuari)
+            );
+            // Agregar la fila a la tabla
+            $("#tabla-usuarios tbody").append(row);
+        });
+        });
+        $("#myModal1").show();
+    });
 
+    // Cerrar modal de la botiga cuando se hace clic en la cruz
+    $("#myModal1 .close").click(function() {
+        $("#myModal1").hide();
+    });
+
+    // Cerrar modal de la botiga cuando se hace clic fuera de él
+    $(window).click(function(event) {
+        if (event.target === $("#myModal1")[0]) {
+            $("#myModal1").hide();
+        }
+    });
     // Mostrar modal de la botiga cuando se hace clic en BOTIGA
     $("#botiga_button").click(function() {
         $.get("/dsaApp/items/llista", function(data) {

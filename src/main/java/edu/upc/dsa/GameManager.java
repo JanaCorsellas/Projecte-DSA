@@ -23,6 +23,7 @@ public interface GameManager {
     //public Item addItem(Item i) throws MissingDataException, ItemAlreadyExistsException;
     public void addItem(String color, int preu, String descripcio, String imatge) throws MissingDataException, ItemAlreadyExistsException;
     public void delItem(String color, int preu, String descripcio, String imatge) throws MissingDataException, ItemNotFoundException;
+    public void delItem(String color) throws MissingDataException, ItemNotFoundException;
     public Item getItem(String color, int preu, String descripcio, String imatge);
     public List<Item> findAll();
     public int size();
