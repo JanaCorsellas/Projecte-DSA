@@ -11,6 +11,6 @@ public interface UsuariDAO {
     public Usuari getUsuari(int usuariID);
     public void updateUsuari(int usuariID, String name, String surname, double salary);
     public void deleteUsuari(int usuariID);
-    public List<Usuari> getUsuaris();
-    public List <Usuari> getUsuariByDept(int deptId);
+    public List<Object> getUsuaris();
+    public List <Object> getUsuariByDept(int deptId);
 }

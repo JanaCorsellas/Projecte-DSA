@@ -7,6 +7,10 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.List;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 
 public class SessioImpl implements Sessio {
     private final Connection conn;
@@ -15,31 +19,30 @@ public class SessioImpl implements Sessio {
         this.conn = conn;
     }
 
+
+    @Override
     public void save(Object entity) {
+        if (conn == null) {
+            throw new IllegalStateException("Connection is not initialized.");
+        }
 
-        // INSERT INTO Partida () ()
         String insertQuery = QueryHelper.createQueryINSERT(entity);
-        // INSERT INTO User (ID, lastName, firstName, address, city) VALUES (0, ?, ?, ?,?)
 
-
-        PreparedStatement pstm = null;
-
-        try {
-            pstm = conn.prepareStatement(insertQuery);
-            pstm.setObject(1, 0);
-            int i = 2;
-
-            for (String field: ObjectHelper.getFields(entity)) {
-                pstm.setObject(i++, ObjectHelper.getter(entity, field));
+        try (PreparedStatement pstm = conn.prepareStatement(insertQuery)) {
+            int i = 1;
+            for (String field : ObjectHelper.getFields(entity)) {
+                if (!field.equalsIgnoreCase("id")) {
+                    pstm.setObject(i++, ObjectHelper.getter(entity, field));
+                }
             }
 
-            pstm.executeQuery();
+            pstm.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
+
 
     public void close() {
 

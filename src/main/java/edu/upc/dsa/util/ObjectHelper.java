@@ -21,18 +21,23 @@ public class ObjectHelper {
 
 
     public static void setter(Object object, String property, Object value) {
-        // Method // invoke
-        // property="name";
-        // value ="toni"
-        /*Employee e =
-                e.setName("toni")
-          */
-
+        try {
+            Field field = object.getClass().getDeclaredField(property);
+            field.setAccessible(true);
+            field.set(object, value);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Object getter(Object object, String property) {
-        // Method // invoke
-
+        try {
+            Field field = object.getClass().getDeclaredField(property);
+            field.setAccessible(true);
+            return field.get(object);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

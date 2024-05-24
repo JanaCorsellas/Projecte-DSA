@@ -39,9 +39,15 @@ public class DBUtils {
         String user = DBUtils.getDbUser();
         String pass = DBUtils.getDbPasswd();
 
+        Connection connection = DriverManager.getConnection("jdbc:mariadb://" + host + ":" + port + "/" +
+                db + "?user=" + user + "&password=" + pass);
 
-        Connection connection = DriverManager.getConnection("jdbc:mariadb://"+host+":"+port+"/"+
-                db+"?user="+user+"&password="+pass);
+        // Verificar si la conexión se ha establecido correctamente
+        if (connection != null) {
+            System.out.println("Conexión establecida correctamente.");
+        } else {
+            System.out.println("Error al establecer la conexión.");
+        }
 
         return connection;
     }

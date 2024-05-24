@@ -15,7 +15,7 @@ public class DB2 extends DB{
         // log.debug
 
         PreparedStatement statement1  =  connection.prepareStatement(theQuery);
-        statement1.setString(1, "nom5");
+        statement1.setString(1, "nom6");
         statement1.setString(2, "cognom2");
         statement1.setString(3, "nomusuari2");
         statement1.setString(4, "password2");

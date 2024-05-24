@@ -9,26 +9,32 @@ import java.util.Set;
 public class QueryHelper {
 
     public static String createQueryINSERT(Object entity) {
+        StringBuilder query = new StringBuilder("INSERT INTO ");
+        query.append(entity.getClass().getSimpleName().toLowerCase());
+        query.append(" (");
 
-        StringBuffer sb = new StringBuffer("INSERT INTO ");
-        sb.append(entity.getClass().getSimpleName()).append(" ");
-        sb.append("(");
-
-        String [] fields = ObjectHelper.getFields(entity);
-
-        sb.append("ID");
-        for (String field: fields) {
-            if (!field.equals("ID")) sb.append(", ").append(field);
+        String[] fields = ObjectHelper.getFields(entity);
+        for (String field : fields) {
+            if (!field.equalsIgnoreCase("id")) {
+                query.append(field).append(",");
+            }
         }
-        sb.append(") VALUES (?");
 
-        for (String field: fields) {
-            if (!field.equals("ID"))  sb.append(", ?");
+        query.deleteCharAt(query.length() - 1); // Elimina la última coma
+        query.append(") VALUES (");
+
+        for (String field : fields) {
+            if (!field.equalsIgnoreCase("id")) {
+                query.append("?,");
+            }
         }
-        sb.append(")");
-        // INSERT INTO User (ID, lastName, firstName, address, city) VALUES (0, ?, ?, ?,?)
-        return sb.toString();
+
+        query.deleteCharAt(query.length() - 1); // Elimina la última coma
+        query.append(")");
+
+        return query.toString();
     }
+
 
     public static String createQuerySELECT(Object entity) {
         StringBuffer sb = new StringBuffer();

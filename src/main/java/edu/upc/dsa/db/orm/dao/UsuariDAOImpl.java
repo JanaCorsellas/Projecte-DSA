@@ -83,9 +83,9 @@ public class UsuariDAOImpl implements UsuariDAO {
     }
 
 
-    public List<Usuari> getUsuaris() {
+    public List<Object> getUsuaris() {
         Sessio session = null;
-        List<Usuari> usuariList=null;
+        List<Object> usuariList=null;
         try {
             session = FactorySession.openSession();
             usuariList = session.findAll(Usuari.class);
@@ -100,14 +100,11 @@ public class UsuariDAOImpl implements UsuariDAO {
     }
 
 
-    public List<Usuari> getUsuariByDept(int deptID) {
-
+    public List<Object> getUsuariByDept(int deptID) {
         // SELECT e.name, d.name FROM Usuaris e, DEpt d WHERE e.deptId = d.ID AND e.edat>87 AND ........
-
 //        Connection c =
-
         Sessio session = null;
-        List<Usuari> usuariList=null;
+        List<Object> usuariList=null;
         try {
             session = FactorySession.openSession();
 

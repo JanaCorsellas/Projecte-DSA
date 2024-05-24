@@ -3,6 +3,9 @@ package edu.upc.dsa.services;
 
 import edu.upc.dsa.GameManager;
 import edu.upc.dsa.GameManagerImpl;
+import edu.upc.dsa.db.DBUtils;
+import edu.upc.dsa.db.orm.Sessio;
+import edu.upc.dsa.db.orm.SessioImpl;
 import edu.upc.dsa.exception.IncorrectPasswordException;
 import edu.upc.dsa.exception.MissingDataException;
 import edu.upc.dsa.exception.UserAlreadyExistsException;
@@ -18,6 +21,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 @Api(value = "/usuaris", description = "Endpoint to Usuari Service")
@@ -48,7 +53,6 @@ public class UsuarisService {
         try {
             GameManager manager = GameManagerImpl.getInstance();
             manager.registreUsuari(usuari.getNom(), usuari.getCognom(), usuari.getNomusuari(), usuari.getPassword(), usuari.getPassword2());
-
             return Response.status(201).entity(usuari).build();
         } catch (UserAlreadyExistsException e) {
             return Response.status(409).entity(usuari).build();

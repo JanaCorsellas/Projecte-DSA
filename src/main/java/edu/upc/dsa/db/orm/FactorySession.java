@@ -5,18 +5,11 @@ import edu.upc.dsa.db.DBUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class FactorySession {
 
-    public static Sessio openSession() {
-        Connection conn = getConnection();
-        Sessio session = new SessioImpl(conn);
-        return session;
-    }
-
-
-
-    public static Connection getConnection()  {
+    public static Connection getConnection() {
         String db = DBUtils.getDb();
         String host = DBUtils.getDbHost();
         String port = DBUtils.getDbPort();
@@ -26,8 +19,10 @@ public class FactorySession {
 
         Connection connection = null;
         try {
-            DriverManager.getConnection("jdbc:mariadb://"+host+":"+port+"/"+
-                    db+"?user="+user+"&password="+pass);
+            DriverManager.getConnection("jdbc:mariadb://" + host + ":" + port + "/" +
+                    db + "?user=" + user + "&password=" + pass);
+            System.out.println("jdbc:mariadb://" + host + ":" + port + "/" +
+                    db + "?user=" + user + "&password=" + pass);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -35,7 +30,14 @@ public class FactorySession {
         return connection;
     }
 
-    public static Sessio openSession(String url, String user, String password) {
-        return null;
+    public static Sessio openSession() {
+        Connection conn = null;
+        try {
+            conn = DBUtils.getConnection(); // Asume que DBUtils tiene el método para obtener la conexión
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new SessioImpl(conn);
     }
+
 }

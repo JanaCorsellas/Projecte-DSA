@@ -1,9 +1,16 @@
 package edu.upc.dsa;
 
+import edu.upc.dsa.db.DBUtils;
+import edu.upc.dsa.db.orm.Sessio;
+import edu.upc.dsa.db.orm.SessioImpl;
 import edu.upc.dsa.exception.*;
 import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 import org.apache.log4j.Logger;
@@ -20,7 +27,7 @@ public class GameManagerImpl implements GameManager {
     }
 
     public static GameManager getInstance() {
-        if (instance==null) instance = new GameManagerImpl();
+        if (instance == null) instance = new GameManagerImpl();
         return instance;
     }
 
@@ -46,28 +53,53 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public void registreUsuari(String nom, String cognom, String nomusuari, String password, String password2) throws UserAlreadyExistsException, IncorrectPasswordException, MissingDataException {
+    public void registreUsuari(String nom, String cognom, String nomusuari, String password, String password2) throws UserAlreadyExistsException, IncorrectPasswordException, MissingDataException, SQLException {
         for (Usuari usuari : usuaris) {
             if (usuari.getNomusuari().equals(nomusuari)) {
                 throw new UserAlreadyExistsException("Aquest nom d'usuari ja existeix: " + nomusuari);
             }
         }
-        if(nom == "" || cognom == "" || nomusuari == "" || password == "" || password2 == ""){
+        if (nom == "" || cognom == "" || nomusuari == "" || password == "" || password2 == "") {
             throw new MissingDataException("Falten camps per completar");
-        }
-        else if (!Objects.equals(password, password2)){
+        } else if (!Objects.equals(password, password2)) {
             throw new IncorrectPasswordException("La contrasenya no coincideix");
-        }
-        else{
-            // Si el nombre de usuario no está en uso, registra el usuario
+        } else {
+            //Si el nombre de usuario no está en uso, registra el usuario
             Usuari usuari = new Usuari(nom, cognom, nomusuari, password, password2);
             this.usuaris.add(usuari);
+            try {
+                Connection conn = DBUtils.getConnection();
+                Sessio session = new SessioImpl(conn);
+                session.save(usuari); // INSERT INTO usuari (idXXX, pepito, ...)
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (nom == "" || cognom == "" || nomusuari == "" || password == "" || password2 == "") {
+                throw new MissingDataException("Falten camps per completar");
+            }
+
+//        if (password.equals(password2)) {
+//            // Las contraseñas coinciden, procedemos con la inserción en la base de datos
+//            try {
+//                Connection conn = DBUtils.getConnection();
+//                Sessio session = new SessioImpl(conn);
+//                session.save(usuari); // INSERT INTO usuari (idXXX, pepito, ...)
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            // Las contraseñas no coinciden, manejar el error
+//            throw new IncorrectPasswordException("La contrasenya no coincideix");
+//        }
         }
+
     }
+
     @Override
     public List<Usuari> llistaUsuaris() {
         return new ArrayList<>(usuaris);
     }
+
     @Override
     public boolean usuariExisteix(String nomUsuari) {
         //implementa la lògica per verificar si existeix un usuari
@@ -79,6 +111,7 @@ public class GameManagerImpl implements GameManager {
         }
         return false;
     }
+
     public boolean contrasenyaCorrecte(String nomusuari, String password) {
         Usuari usuari = obtenirUsuariPerNomusuari(nomusuari);
 
@@ -90,33 +123,66 @@ public class GameManagerImpl implements GameManager {
         return usuari.getPassword().equals(password);
     }
 
+    public Integer getUserId(String username, String password) {
+        String query = "SELECT id FROM usuari WHERE nomusuari = ? AND password = ?";
+
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement pstm = conn.prepareStatement(query)) {
+
+            pstm.setString(1, username);
+            pstm.setString(2, password);
+
+            try (ResultSet rs = pstm.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id");
+                } else {
+                    throw new IllegalArgumentException("Usuario o contraseña incorrectos");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null; // O maneja la excepción de otra manera apropiada
+        }
+    }
+
+
     @Override
     public void login(String nomusuari, String password) throws UserNotFoundException, IncorrectPasswordException, MissingDataException {
         // Lógica para buscar el usuario en tu sistema
         // Si el usuario no se encuentra, lanza la excepción
-        if (!usuariExisteix(nomusuari)) {
-            throw new UserNotFoundException("L'usuari no existeix" + nomusuari);
-        }
-        if (!contrasenyaCorrecte(nomusuari, password)){
-            throw new IncorrectPasswordException("Contrasenya incorrecte");
-        }
-        if (nomusuari == "" || password == ""){
-            throw new MissingDataException("Completa tots els camps");
-        }
-        else{
-            logger.info("Has iniciat sessió");
-        }
-    }
+//        if (!usuariExisteix(nomusuari)) {
+//            throw new UserNotFoundException("L'usuari no existeix" + nomusuari);
+//        }
+//        if (!contrasenyaCorrecte(nomusuari, password)) {
+//            throw new IncorrectPasswordException("Contrasenya incorrecte");
+//        }
+//        if (nomusuari == "" || password == "") {
+//            throw new MissingDataException("Completa tots els camps");
+//        } else {
+                Connection conn = null;
+                try {
+                    conn = DBUtils.getConnection();
+                    Sessio session = new SessioImpl(conn);
+                    Usuari e = (Usuari) session.get(Usuari.class, getUserId(nomusuari, password));
+                    System.out.println("id:" + getUserId(nomusuari, password));
 
-    @Override
-    public List<Item> llistarItemsPerPreuAscendent() {
-        logger.info("Llistem els ítems de la botiga per ordre de preu ascendent");
-        List<Item> itemsOrdenats = new ArrayList<>(items);
-        Comparator<Item> comparadorAscendent = Comparator.comparingInt(Item::getPreu);
-        Collections.sort(itemsOrdenats, comparadorAscendent);
-        logger.info("Items ordenats correctament");
-        return itemsOrdenats;
-    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (conn != null) {
+                            conn.close();
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            logger.info("Has iniciat sessió");
+
+
+        }
 
     @Override
     public Item obtenirItemPerColor(String color) {
