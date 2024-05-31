@@ -106,4 +106,17 @@ public class UsuarisService {
         GenericEntity<List<Usuari>> entity = new GenericEntity<List<Usuari>>(usuaris) {};
         return Response.status(201).entity(entity).build()  ;
     }
+    @GET
+    @ApiOperation(value = "Obtenir un ranking dels usuaris", notes = "usuaris ordenats")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Usuari.class, responseContainer="List"),
+    })
+    @Path("/stats/ranking")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRanking() {
+
+        List<Usuari> usuaris = this.um.ranking();
+        GenericEntity<List<Usuari>> entity = new GenericEntity<List<Usuari>>(usuaris) {};
+        return Response.status(201).entity(entity).build()  ;
+    }
 }

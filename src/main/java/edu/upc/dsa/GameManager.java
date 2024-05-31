@@ -27,6 +27,7 @@ public interface GameManager {
     public Item getItem(String color, int preu, String descripcio, String imatge);
     public List<Item> findAll();
     public int size();
+    public List<Usuari> ranking();
 
 }
 

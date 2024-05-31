@@ -19,6 +19,7 @@ public class GameManagerImpl implements GameManager {
     private static GameManager instance;
     protected List<Usuari> usuaris;
     protected List<Item> items;
+    Usuari usuari;
     final static Logger logger = Logger.getLogger(GameManagerImpl.class);
 
     private GameManagerImpl() {
@@ -37,6 +38,7 @@ public class GameManagerImpl implements GameManager {
 
         return ret;
     }
+
 
     @Override
     public Usuari obtenirUsuariPerNomusuari(String nomUsuari) {
@@ -64,8 +66,10 @@ public class GameManagerImpl implements GameManager {
         } else if (!Objects.equals(password, password2)) {
             throw new IncorrectPasswordException("La contrasenya no coincideix");
         } else {
+            int puntuacio = usuari.getPuntuacio();
+            String data = usuari.getData();
             //Si el nombre de usuario no está en uso, registra el usuario
-            Usuari usuari = new Usuari(nom, cognom, nomusuari, password, password2);
+            Usuari usuari = new Usuari(nom, cognom, nomusuari, password, password2, puntuacio, data);
             this.usuaris.add(usuari);
             try {
                 Connection conn = DBUtils.getConnection();
@@ -276,4 +280,21 @@ public class GameManagerImpl implements GameManager {
         logger.warn("not found " + color);
         return null;
     }
+    @Override
+    public List<Usuari> ranking() {
+        for (Usuari u : this.usuaris) {
+            String nom = usuari.getNom();
+            String cognom = usuari.getCognom();
+            String nomusuari = usuari.getNomusuari();
+            String password = usuari.getPassword();
+            String password2 = usuari.getPassword2();
+            int puntuacio = usuari.getPuntuacio();
+            String data = usuari.getData();
+
+            u = new Usuari(nom,cognom,nomusuari,password,password2,puntuacio, data);
+            usuaris.add(u);
+        }
+        return usuaris;
+    }
+
 }
