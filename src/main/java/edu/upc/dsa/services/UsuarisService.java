@@ -10,6 +10,7 @@ import edu.upc.dsa.exception.IncorrectPasswordException;
 import edu.upc.dsa.exception.MissingDataException;
 import edu.upc.dsa.exception.UserAlreadyExistsException;
 import edu.upc.dsa.exception.UserNotFoundException;
+import edu.upc.dsa.models.Formulari;
 import edu.upc.dsa.models.Usuari;
 import edu.upc.dsa.models.UsuariLogin;
 import io.swagger.annotations.Api;
@@ -105,5 +106,29 @@ public class UsuarisService {
         List<Usuari> usuaris = this.um.llistaUsuaris();
         GenericEntity<List<Usuari>> entity = new GenericEntity<List<Usuari>>(usuaris) {};
         return Response.status(201).entity(entity).build()  ;
+    }
+
+    @POST
+    @ApiOperation(value = "Enviar un nou formulari", notes = "Formulari per solicitar i enviar informació sobre un tema")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Formulari enviat correctament", response= Formulari.class),
+            @ApiResponse(code = 404, message = "Falta completar algun camp"),
+            @ApiResponse(code = 500, message = "Error de validació")
+
+    })
+
+    @Path("/formulariSolicitud")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response formulari(Formulari formulari){
+        try {
+            GameManager manager = GameManagerImpl.getInstance();
+            manager.formulari(formulari.getData(), formulari.getTitle(), formulari.getMessage(), formulari.getSender());
+            return Response.status(201).entity(formulari).build();
+        } catch (MissingDataException e) {
+            return Response.status(404).entity(formulari).build();
+        } catch (Exception e) {
+            return Response.status(500).entity(formulari).build();
+        }
     }
 }
