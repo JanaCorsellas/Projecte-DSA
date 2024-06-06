@@ -1,7 +1,6 @@
 versió 6
 
-He afegit al backend el servei per afegir i eliminar ítems.
-He afegit a la web per poder veure la llista d'usuaris registrats.
+He afegit el codi del mínim 2 (Jana)
 
 Backend:
 - login
@@ -10,6 +9,7 @@ Backend:
 - llistaÍtems
 - addItem
 - delItem
+- Mínim2 Jana -> formulari
 
 Pàgina Web:
 - registre correcte
