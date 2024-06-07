@@ -11,6 +11,7 @@ import edu.upc.dsa.exception.MissingDataException;
 import edu.upc.dsa.exception.UserAlreadyExistsException;
 import edu.upc.dsa.exception.UserNotFoundException;
 import edu.upc.dsa.models.Formulari;
+import edu.upc.dsa.models.Issue;
 import edu.upc.dsa.models.Usuari;
 import edu.upc.dsa.models.UsuariLogin;
 import io.swagger.annotations.Api;
@@ -130,5 +131,32 @@ public class UsuarisService {
         } catch (Exception e) {
             return Response.status(500).entity(formulari).build();
         }
+    }
+    @GET
+    @ApiOperation(value = "Obtenir una llista de tots els issues", notes = "issues dels usuaris")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Issue.class, responseContainer="List"),
+    })
+    @Path("/llistaFormularis")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFormularis() {
+
+        List<Formulari> formularis = this.um.llistaFormularis();
+        GenericEntity<List<Formulari>> entity = new GenericEntity<List<Formulari>>(formularis) {};
+        return Response.status(201).entity(entity).build()  ;
+    }
+
+    @GET
+    @ApiOperation(value = "Obtenir perfil a partir del nomUsuari", notes = "Perfil del jugador")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Usuari.class),
+            @ApiResponse(code = 404, message = "Track not found")
+    })
+    @Path("/getPerfil/{nomusuari}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPerfil(@PathParam("nomusuari") String nomusuari) {
+        Usuari usuari = this.um.obtenirUsuariPerNomusuari(nomusuari);
+        if (usuari==null) return Response.status(404).build();
+        else return Response.status(201).entity(usuari).build();
     }
 }

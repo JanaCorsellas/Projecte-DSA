@@ -5,6 +5,7 @@ import edu.upc.dsa.db.orm.Sessio;
 import edu.upc.dsa.db.orm.SessioImpl;
 import edu.upc.dsa.exception.*;
 import edu.upc.dsa.models.Formulari;
+import edu.upc.dsa.models.Issue;
 import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
 
@@ -20,6 +21,7 @@ public class GameManagerImpl implements GameManager {
     private static GameManager instance;
     protected List<Usuari> usuaris;
     protected List<Item> items;
+    protected List<Issue> issues;
     protected List<Formulari> formularis;
     final static Logger logger = Logger.getLogger(GameManagerImpl.class);
 
@@ -27,6 +29,7 @@ public class GameManagerImpl implements GameManager {
         this.usuaris = new LinkedList<>();
         this.items = new LinkedList<>();
         this.formularis = new LinkedList<>();
+        this.issues = new LinkedList<>();
     }
 
     public static GameManager getInstance() {
@@ -50,6 +53,9 @@ public class GameManagerImpl implements GameManager {
             Formulari formulari = new Formulari (data, title, message, sender);
             this.formularis.add(formulari);
         }
+    }
+    public List<Formulari> llistaFormularis() {
+        return new ArrayList<>(formularis);
     }
 
     @Override
@@ -81,7 +87,7 @@ public class GameManagerImpl implements GameManager {
             //Si el nombre de usuario no está en uso, registra el usuario
             Usuari usuari = new Usuari(nom, cognom, nomusuari, password, password2);
             this.usuaris.add(usuari);
-            try {
+            /*try {
                 Connection conn = DBUtils.getConnection();
                 Sessio session = new SessioImpl(conn);
                 session.save(usuari); // INSERT INTO usuari (idXXX, pepito, ...)
@@ -90,7 +96,7 @@ public class GameManagerImpl implements GameManager {
             }
             if (nom == "" || cognom == "" || nomusuari == "" || password == "" || password2 == "") {
                 throw new MissingDataException("Falten camps per completar");
-            }
+            }*/
 
 //        if (password.equals(password2)) {
 //            // Las contraseñas coinciden, procedemos con la inserción en la base de datos
@@ -165,16 +171,16 @@ public class GameManagerImpl implements GameManager {
     public void login(String nomusuari, String password) throws UserNotFoundException, IncorrectPasswordException, MissingDataException {
         // Lógica para buscar el usuario en tu sistema
         // Si el usuario no se encuentra, lanza la excepción
-//        if (!usuariExisteix(nomusuari)) {
-//            throw new UserNotFoundException("L'usuari no existeix" + nomusuari);
-//        }
-//        if (!contrasenyaCorrecte(nomusuari, password)) {
-//            throw new IncorrectPasswordException("Contrasenya incorrecte");
-//        }
-//        if (nomusuari == "" || password == "") {
-//            throw new MissingDataException("Completa tots els camps");
-//        } else {
-                Connection conn = null;
+        if (!usuariExisteix(nomusuari)) {
+            throw new UserNotFoundException("L'usuari no existeix" + nomusuari);
+        }
+        if (!contrasenyaCorrecte(nomusuari, password)) {
+            throw new IncorrectPasswordException("Contrasenya incorrecte");
+        }
+        if (nomusuari == "" || password == "") {
+            throw new MissingDataException("Completa tots els camps");
+        } else {
+                /*Connection conn = null;
                 try {
                     conn = DBUtils.getConnection();
                     Sessio session = new SessioImpl(conn);
@@ -192,11 +198,12 @@ public class GameManagerImpl implements GameManager {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
-                }
+                }*/
             logger.info("Has iniciat sessió");
 
 
         }
+    }
 
     @Override
     public Item obtenirItemPerColor(String color) {
@@ -208,7 +215,6 @@ public class GameManagerImpl implements GameManager {
         return null;
     }
 
-    //mètodes extres
     @Override
     public void deleteUsuari(String nomusuari) {
         Usuari t = this.obtenirUsuariPerNomusuari(nomusuari);
@@ -289,5 +295,19 @@ public class GameManagerImpl implements GameManager {
         }
         logger.warn("not found " + color);
         return null;
+    }
+    @Override
+    public void addIssue(String date, String informer, String message) throws MissingDataException {
+
+        if(date == "" || informer == "" || message == ""){
+            throw new MissingDataException("Falten camps per completar");
+        }
+        else{
+            Issue issue = new Issue(date, informer, message);
+            this.issues.add(issue);
+        }
+    }
+    public List<Issue> llistaIssues() {
+        return new ArrayList<>(issues);
     }
 }

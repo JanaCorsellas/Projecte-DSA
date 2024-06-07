@@ -1,6 +1,6 @@
-versió 6
+versió 7
 
-He afegit el codi del mínim 2 (Jana)
+He afegit el codi del mínim 2 (Carla) i el codi per que retorni el Perfil
 
 Backend:
 - login
@@ -9,7 +9,9 @@ Backend:
 - llistaÍtems
 - addItem
 - delItem
+- perfil
 - Mínim2 Jana -> formulari
+- Mínim2 Carla -> issue
 
 Pàgina Web:
 - registre correcte

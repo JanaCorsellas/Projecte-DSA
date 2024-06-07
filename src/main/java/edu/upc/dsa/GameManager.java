@@ -1,11 +1,14 @@
 package edu.upc.dsa;
 
 import edu.upc.dsa.exception.*;
+import edu.upc.dsa.models.Formulari;
+import edu.upc.dsa.models.Issue;
 import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
 
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface GameManager {
@@ -29,5 +32,8 @@ public interface GameManager {
     public int size();
 
     public void formulari(String data, String title, String message, String sender) throws MissingDataException;
+    public List<Formulari> llistaFormularis();
+    public void addIssue(String date, String informer, String message) throws MissingDataException;
+    public List<Issue> llistaIssues();
 }
 
