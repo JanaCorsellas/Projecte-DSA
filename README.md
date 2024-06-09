@@ -12,6 +12,7 @@ Backend:
 - perfil
 - Mínim2 Jana -> formulari
 - Mínim2 Carla -> issue
+- Mínim2 Andrea -> FAQs
 
 Pàgina Web:
 - registre correcte
