@@ -8,6 +8,7 @@ import edu.upc.dsa.models.Formulari;
 import edu.upc.dsa.models.Issue;
 import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
+import edu.upc.dsa.models.Faq;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,6 +23,7 @@ public class GameManagerImpl implements GameManager {
     protected List<Usuari> usuaris;
     protected List<Item> items;
     protected List<Issue> issues;
+    private List<Faq> faqs;
     protected List<Formulari> formularis;
     final static Logger logger = Logger.getLogger(GameManagerImpl.class);
 
@@ -310,4 +312,36 @@ public class GameManagerImpl implements GameManager {
     public List<Issue> llistaIssues() {
         return new ArrayList<>(issues);
     }
+
+    @Override
+    public List<Faq> getAllFaqs() {
+        return faqs;
+    }
+
+    @Override
+    public void addFaq(Faq faq) {
+        faqs.add(faq);
+    }
+
+    @Override
+    public void removeFaq(String faqId) {
+        Iterator<Faq> iterator = faqs.iterator();
+        while (iterator.hasNext()) {
+            Faq faq = iterator.next();
+            if (faq.getId().equals(faqId)) {
+                iterator.remove();
+                break; // Salir del bucle una vez que se elimina la FAQ
+            }
+        }
+    }
+
+
+
+
+
+
+
+
 }
+
+

@@ -5,6 +5,7 @@ import edu.upc.dsa.models.Formulari;
 import edu.upc.dsa.models.Issue;
 import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
+import edu.upc.dsa.models.Faq;
 
 
 import java.sql.SQLException;
@@ -20,6 +21,11 @@ public interface GameManager {
     void login(String nomusuari, String password) throws UserNotFoundException, IncorrectPasswordException, MissingDataException;
 
     public Item obtenirItemPerColor(String color);
+
+
+    List<Faq> getAllFaqs();
+    void addFaq(Faq faq);
+    void removeFaq(String faqId);
 
     //mètodes extres
     public void deleteUsuari(String id);

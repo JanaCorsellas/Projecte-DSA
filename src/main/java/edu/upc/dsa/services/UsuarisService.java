@@ -10,10 +10,7 @@ import edu.upc.dsa.exception.IncorrectPasswordException;
 import edu.upc.dsa.exception.MissingDataException;
 import edu.upc.dsa.exception.UserAlreadyExistsException;
 import edu.upc.dsa.exception.UserNotFoundException;
-import edu.upc.dsa.models.Formulari;
-import edu.upc.dsa.models.Issue;
-import edu.upc.dsa.models.Usuari;
-import edu.upc.dsa.models.UsuariLogin;
+import edu.upc.dsa.models.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -25,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "/usuaris", description = "Endpoint to Usuari Service")
@@ -159,4 +157,20 @@ public class UsuarisService {
         if (usuari==null) return Response.status(404).build();
         else return Response.status(201).entity(usuari).build();
     }
+
+    @Path("/FAQs")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Faq> getFaqs() {
+        // Aquí simulamos la obtención de las FAQs desde algún origen de datos
+        List<Faq> faqs = new ArrayList<>();
+        faqs.add(new Faq("f1", "q1"));
+        faqs.add(new Faq("f2", "q2"));
+        // Agrega más FAQs según sea necesario
+        return faqs;
+
+    }
+
+
+
+
 }
