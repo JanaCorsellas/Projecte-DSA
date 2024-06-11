@@ -94,7 +94,7 @@ public class UsuarisService {
     }
 
     @GET
-    @ApiOperation(value = "Obtenir una llista de tots els usuaris", notes = "usuaris de la presó")
+    @ApiOperation(value = "Obtenir una llista de tots els usuaris", notes = "Usuaris de la presó")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Usuari.class, responseContainer="List"),
     })
@@ -131,7 +131,7 @@ public class UsuarisService {
         }
     }
     @GET
-    @ApiOperation(value = "Obtenir una llista de tots els issues", notes = "issues dels usuaris")
+    @ApiOperation(value = "Obtenir una llista de tots els formularis", notes = "Formularis dels usuaris")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Issue.class, responseContainer="List"),
     })

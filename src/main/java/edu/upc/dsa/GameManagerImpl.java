@@ -22,9 +22,10 @@ public class GameManagerImpl implements GameManager {
     private static GameManager instance;
     protected List<Usuari> usuaris;
     protected List<Item> items;
+    protected List<Formulari> formularis;
     protected List<Issue> issues;
     private List<Faq> faqs;
-    protected List<Formulari> formularis;
+
     final static Logger logger = Logger.getLogger(GameManagerImpl.class);
 
     private GameManagerImpl() {
@@ -32,6 +33,7 @@ public class GameManagerImpl implements GameManager {
         this.items = new LinkedList<>();
         this.formularis = new LinkedList<>();
         this.issues = new LinkedList<>();
+        this.faqs = new LinkedList<>();
     }
 
     public static GameManager getInstance() {
@@ -46,19 +48,7 @@ public class GameManagerImpl implements GameManager {
         return ret;
     }
 
-    @Override
-    public void formulari(String data, String title, String message, String sender) throws MissingDataException {
-        if (data == "" || title == "" || message == "" || sender == ""){
-            throw new MissingDataException("Falten camps per completar");
-        }
-        else{
-            Formulari formulari = new Formulari (data, title, message, sender);
-            this.formularis.add(formulari);
-        }
-    }
-    public List<Formulari> llistaFormularis() {
-        return new ArrayList<>(formularis);
-    }
+
 
     @Override
     public Usuari obtenirUsuariPerNomusuari(String nomUsuari) {
@@ -74,6 +64,7 @@ public class GameManagerImpl implements GameManager {
         return this.items;
     }
 
+    //Mètode per registrar un usuari
     @Override
     public void registreUsuari(String nom, String cognom, String nomusuari, String password, String password2) throws UserAlreadyExistsException, IncorrectPasswordException, MissingDataException, SQLException {
         for (Usuari usuari : usuaris) {
@@ -89,32 +80,26 @@ public class GameManagerImpl implements GameManager {
             //Si el nombre de usuario no está en uso, registra el usuario
             Usuari usuari = new Usuari(nom, cognom, nomusuari, password, password2);
             this.usuaris.add(usuari);
-            /*try {
-                Connection conn = DBUtils.getConnection();
-                Sessio session = new SessioImpl(conn);
-                session.save(usuari); // INSERT INTO usuari (idXXX, pepito, ...)
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            if (nom == "" || cognom == "" || nomusuari == "" || password == "" || password2 == "") {
-                throw new MissingDataException("Falten camps per completar");
-            }*/
-
-//        if (password.equals(password2)) {
-//            // Las contraseñas coinciden, procedemos con la inserción en la base de datos
-//            try {
-//                Connection conn = DBUtils.getConnection();
-//                Sessio session = new SessioImpl(conn);
-//                session.save(usuari); // INSERT INTO usuari (idXXX, pepito, ...)
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            // Las contraseñas no coinciden, manejar el error
-//            throw new IncorrectPasswordException("La contrasenya no coincideix");
-//        }
         }
 
+    }
+
+    //Mètode per iniciar sessió buscant l'usuari a la bbdd, en cas que no estigui registrat avisa
+    @Override
+    public void login(String nomusuari, String password) throws UserNotFoundException, IncorrectPasswordException, MissingDataException {
+        // Lógica para buscar el usuario en tu sistema
+        // Si el usuario no se encuentra, lanza la excepción
+        if (!usuariExisteix(nomusuari)) {
+            throw new UserNotFoundException("L'usuari no existeix" + nomusuari);
+        }
+        if (!contrasenyaCorrecte(nomusuari, password)) {
+            throw new IncorrectPasswordException("Contrasenya incorrecte");
+        }
+        if (nomusuari == "" || password == "") {
+            throw new MissingDataException("Completa tots els camps");
+        } else {
+            logger.info("Has iniciat sessió");
+        }
     }
 
     @Override
@@ -122,10 +107,9 @@ public class GameManagerImpl implements GameManager {
         return new ArrayList<>(usuaris);
     }
 
+    //Mètode per verificar si un usuari existeix buscant a la llista d'usuaris
     @Override
     public boolean usuariExisteix(String nomUsuari) {
-        //implementa la lògica per verificar si existeix un usuari
-        //¡busca en una llista d'usuaris
         for (Usuari usuari : usuaris) {
             if (usuari.getNomusuari().equals(nomUsuari)) {
                 return true;
@@ -134,14 +118,13 @@ public class GameManagerImpl implements GameManager {
         return false;
     }
 
+    //Mètode per comprovar que la contrasenya proporcionada per l'usuari és la correcte, comparant-la amb la que tenim a la bbdd
     public boolean contrasenyaCorrecte(String nomusuari, String password) {
         Usuari usuari = obtenirUsuariPerNomusuari(nomusuari);
 
         if (usuari == null) {
             return false;
         }
-
-        // Comparar la contraseña proporcionada con la contraseña almacenada para el usuario
         return usuari.getPassword().equals(password);
     }
 
@@ -169,44 +152,7 @@ public class GameManagerImpl implements GameManager {
     }
 
 
-    @Override
-    public void login(String nomusuari, String password) throws UserNotFoundException, IncorrectPasswordException, MissingDataException {
-        // Lógica para buscar el usuario en tu sistema
-        // Si el usuario no se encuentra, lanza la excepción
-        if (!usuariExisteix(nomusuari)) {
-            throw new UserNotFoundException("L'usuari no existeix" + nomusuari);
-        }
-        if (!contrasenyaCorrecte(nomusuari, password)) {
-            throw new IncorrectPasswordException("Contrasenya incorrecte");
-        }
-        if (nomusuari == "" || password == "") {
-            throw new MissingDataException("Completa tots els camps");
-        } else {
-                /*Connection conn = null;
-                try {
-                    conn = DBUtils.getConnection();
-                    Sessio session = new SessioImpl(conn);
-                    Usuari e = (Usuari) session.get(Usuari.class, getUserId(nomusuari, password));
-                    System.out.println("id:" + getUserId(nomusuari, password));
-
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        if (conn != null) {
-                            conn.close();
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }*/
-            logger.info("Has iniciat sessió");
-
-
-        }
-    }
-
+    //Mètode per obtenir un ítem per color
     @Override
     public Item obtenirItemPerColor(String color) {
         for (Item producte : items) {
@@ -217,6 +163,7 @@ public class GameManagerImpl implements GameManager {
         return null;
     }
 
+    //Mètode per eliminar un usuari
     @Override
     public void deleteUsuari(String nomusuari) {
         Usuari t = this.obtenirUsuariPerNomusuari(nomusuari);
@@ -227,6 +174,7 @@ public class GameManagerImpl implements GameManager {
         this.usuaris.remove(t);
     }
 
+    //Mètode per afegir un ítem a la botiga
     @Override
     public void addItem(String color, int preu, String descripcio, String imatge) throws MissingDataException, ItemAlreadyExistsException {
         for (Item item : items) {
@@ -244,6 +192,7 @@ public class GameManagerImpl implements GameManager {
         }
     }
 
+    //Mètode per eliminar un ítem de la botiga
     @Override
     public void delItem(String color) throws ItemNotFoundException, MissingDataException {
         if (color == null || color.isEmpty()) {
@@ -262,29 +211,7 @@ public class GameManagerImpl implements GameManager {
         }
     }
 
-    @Override
-    public void delItem(String color, int preu, String descripcio, String imatge) throws MissingDataException, ItemNotFoundException{
-        if(color == null){
-            logger.info("Digues el color de la skin");
-            throw new MissingDataException("Cal completar els camps");
-        }
-        boolean itemFound = false;
-        Iterator<Item> iterator = this.items.iterator();
-
-        while (iterator.hasNext()) {
-            Item item = iterator.next();
-            if (item.getColor().equals(color)) {
-                iterator.remove();
-                itemFound = true;
-                break;
-            }
-        }
-
-        if (!itemFound) {
-            throw new ItemNotFoundException("No s'ha trobat cap item amb aquest color: " + color);
-        }
-    }
-
+    //Mètode per obtenir un ítem
     @Override
     public Item getItem(String color, int preu, String descripcio, String imatge) {
         logger.info("getItem(" + color + ")");
@@ -298,6 +225,25 @@ public class GameManagerImpl implements GameManager {
         logger.warn("not found " + color);
         return null;
     }
+
+    //Mètode per escriure i enviar un formulari
+    @Override
+    public void formulari(String data, String title, String message, String sender) throws MissingDataException {
+        if (data == "" || title == "" || message == "" || sender == ""){
+            throw new MissingDataException("Falten camps per completar");
+        }
+        else{
+            Formulari formulari = new Formulari (data, title, message, sender);
+            this.formularis.add(formulari);
+        }
+    }
+
+    //Mètode per obtenir una llista de tots els formularis
+    public List<Formulari> llistaFormularis() {
+        return new ArrayList<>(formularis);
+    }
+
+    //Mètode per afegir una issue
     @Override
     public void addIssue(String date, String informer, String message) throws MissingDataException {
 
@@ -309,20 +255,25 @@ public class GameManagerImpl implements GameManager {
             this.issues.add(issue);
         }
     }
+
+    //Mètode per obtenir una llista de totes les issues
     public List<Issue> llistaIssues() {
         return new ArrayList<>(issues);
     }
 
-    @Override
-    public List<Faq> getAllFaqs() {
-        return faqs;
-    }
-
+    //Mètode per afegir una pregunta
     @Override
     public void addFaq(Faq faq) {
         faqs.add(faq);
     }
 
+    //Mètode per obtenir una llista de totes les preguntes
+    @Override
+    public List<Faq> getAllFaqs() {
+        return faqs;
+    }
+
+    //Mètode per eliminar una pregunta
     @Override
     public void removeFaq(String faqId) {
         Iterator<Faq> iterator = faqs.iterator();
@@ -334,14 +285,6 @@ public class GameManagerImpl implements GameManager {
             }
         }
     }
-
-
-
-
-
-
-
-
 }
 
 

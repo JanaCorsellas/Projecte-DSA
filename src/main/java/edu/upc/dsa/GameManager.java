@@ -21,25 +21,24 @@ public interface GameManager {
     void login(String nomusuari, String password) throws UserNotFoundException, IncorrectPasswordException, MissingDataException;
 
     public Item obtenirItemPerColor(String color);
-
-
-    List<Faq> getAllFaqs();
-    void addFaq(Faq faq);
-    void removeFaq(String faqId);
-
-    //mètodes extres
-    public void deleteUsuari(String id);
-    //public Item addItem(Item i) throws MissingDataException, ItemAlreadyExistsException;
     public void addItem(String color, int preu, String descripcio, String imatge) throws MissingDataException, ItemAlreadyExistsException;
-    public void delItem(String color, int preu, String descripcio, String imatge) throws MissingDataException, ItemNotFoundException;
     public void delItem(String color) throws MissingDataException, ItemNotFoundException;
-    public Item getItem(String color, int preu, String descripcio, String imatge);
     public List<Item> findAll();
     public int size();
+
+
 
     public void formulari(String data, String title, String message, String sender) throws MissingDataException;
     public List<Formulari> llistaFormularis();
     public void addIssue(String date, String informer, String message) throws MissingDataException;
     public List<Issue> llistaIssues();
+    List<Faq> getAllFaqs();
+    void addFaq(Faq faq);
+    void removeFaq(String faqId);
+
+
+    //mètodes extres
+    public void deleteUsuari(String id);
+    public Item getItem(String color, int preu, String descripcio, String imatge);
 }
 

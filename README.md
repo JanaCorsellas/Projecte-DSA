@@ -1,6 +1,6 @@
-versió 7
+versió 8
 
-He afegit el codi del mínim 2 (Carla) i el codi per que retorni el Perfil
+Neteja del codi
 
 Backend:
 - login
@@ -19,3 +19,6 @@ Pàgina Web:
 - login correcte
 - llista de productes correcte
 - llista usuaris registrats correcte
+
+Falta:
+- Mínim2 Dani
