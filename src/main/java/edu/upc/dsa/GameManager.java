@@ -38,7 +38,7 @@ public interface GameManager {
 
 
     //mètodes extres
-    public void deleteUsuari(String id);
+    public void baixaUsuari(String nomusuari) throws UserNotFoundException, SQLException;
     public Item getItem(String color, int preu, String descripcio, String imatge);
 }
 

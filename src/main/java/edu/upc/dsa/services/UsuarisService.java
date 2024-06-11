@@ -107,6 +107,29 @@ public class UsuarisService {
         return Response.status(201).entity(entity).build()  ;
     }
 
+    @DELETE
+    @ApiOperation(value = "Donar de baixa un usuari", notes = "Eliminar el registre d'un usuari")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Usuari donat de baixa correctament"),
+            @ApiResponse(code = 404, message = "Usuari no trobat"),
+            @ApiResponse(code = 500, message = "Error intern del servidor")
+    })
+    @Path("/baixaUsuari/{nomusuari}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response baixaUsuari(@PathParam("nomusuari") String nomusuari) {
+        try {
+            GameManager manager = GameManagerImpl.getInstance();
+            manager.baixaUsuari(nomusuari);
+            return Response.status(200).build();
+        } catch (UserNotFoundException e) {
+            return Response.status(404).entity(nomusuari).build();
+        } catch (SQLException e) {
+            return Response.status(500).entity(nomusuari).build();
+        } catch (Exception e) {
+            return Response.status(500).entity(nomusuari).build();
+        }
+    }
+
     @POST
     @ApiOperation(value = "Enviar un nou formulari", notes = "Formulari per solicitar i enviar informació sobre un tema")
     @ApiResponses(value = {
@@ -169,8 +192,4 @@ public class UsuarisService {
         return faqs;
 
     }
-
-
-
-
 }

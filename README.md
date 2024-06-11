@@ -1,6 +1,7 @@
 versió 8
 
-Neteja del codi
+afegit el mètode de donar de baixa un usuari
+Explicació i neteja del codi
 
 Backend:
 - login

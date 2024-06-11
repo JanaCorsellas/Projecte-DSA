@@ -80,6 +80,31 @@ public class GameManagerImpl implements GameManager {
             //Si el nombre de usuario no está en uso, registra el usuario
             Usuari usuari = new Usuari(nom, cognom, nomusuari, password, password2);
             this.usuaris.add(usuari);
+
+            /*try {
+                Connection conn = DBUtils.getConnection();
+                Sessio session = new SessioImpl(conn);
+                session.save(usuari); // INSERT INTO usuari (idXXX, pepito, ...)
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (nom == "" || cognom == "" || nomusuari == "" || password == "" || password2 == "") {
+                throw new MissingDataException("Falten camps per completar");
+            }*/
+
+//        if (password.equals(password2)) {
+//            // Las contraseñas coinciden, procedemos con la inserción en la base de datos
+//            try {
+//                Connection conn = DBUtils.getConnection();
+//                Sessio session = new SessioImpl(conn);
+//                session.save(usuari); // INSERT INTO usuari (idXXX, pepito, ...)
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            // Las contraseñas no coinciden, manejar el error
+//            throw new IncorrectPasswordException("La contrasenya no coincideix");
+//        }
         }
 
     }
@@ -98,6 +123,23 @@ public class GameManagerImpl implements GameManager {
         if (nomusuari == "" || password == "") {
             throw new MissingDataException("Completa tots els camps");
         } else {
+            /*Connection conn = null;
+                try {
+                    conn = DBUtils.getConnection();
+                    Sessio session = new SessioImpl(conn);
+                    Usuari e = (Usuari) session.get(Usuari.class, getUserId(nomusuari, password));
+                    System.out.println("id:" + getUserId(nomusuari, password));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (conn != null) {
+                            conn.close();
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }*/
             logger.info("Has iniciat sessió");
         }
     }
@@ -163,15 +205,36 @@ public class GameManagerImpl implements GameManager {
         return null;
     }
 
-    //Mètode per eliminar un usuari
+    //Mètode per donar de baixa/eliminar un usuari
     @Override
-    public void deleteUsuari(String nomusuari) {
-        Usuari t = this.obtenirUsuariPerNomusuari(nomusuari);
-        if (t==null){
-            logger.warn("no s'ha trobat l'usuari " + t);
+    public void baixaUsuari(String nomusuari) throws UserNotFoundException, SQLException {
+        Usuari usuari = obtenirUsuariPerNomusuari(nomusuari);
+        if (usuari == null) {
+            logger.warn("No s'ha trobat l'usuari " + nomusuari);
+            throw new UserNotFoundException("L'usuari no existeix: " + nomusuari);
+        } else {
+            // Lógica adicional para la baja, como registrar en un log de auditoría
+            logger.info("Donant de baixa l'usuari " + nomusuari);
+
+            // Eliminar de la base de datos, si es necesario
+            try (Connection conn = DBUtils.getConnection()) {
+                String query = "DELETE FROM usuari WHERE nomusuari = ?";
+                try (PreparedStatement pstm = conn.prepareStatement(query)) {
+                    pstm.setString(1, nomusuari);
+                    int affectedRows = pstm.executeUpdate();
+                    if (affectedRows == 0) {
+                        throw new SQLException("No s'ha pogut eliminar l'usuari de la base de dades.");
+                    }
+                }
+            } catch (SQLException e) {
+                logger.error("Error en eliminar l'usuari de la base de dades", e);
+                throw e;
+            }
+
+            // Eliminar de la llista local
+            this.usuaris.remove(usuari);
+            logger.info("Usuari " + nomusuari + " donat de baixa amb èxit.");
         }
-        else logger.info(t+" eliminat ");
-        this.usuaris.remove(t);
     }
 
     //Mètode per afegir un ítem a la botiga
