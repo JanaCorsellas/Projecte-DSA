@@ -5,7 +5,7 @@ public class Sala {
     int numeroSala;
     boolean estatPorta; //false vol dir tancada, true oberta
 
-    public Sala (String id, int numeroSala){
+    public Sala (String id, int numeroSala, boolean estatPorta){
         this.id = id;
         this.numeroSala = numeroSala;
         this.estatPorta = false;
@@ -23,5 +23,13 @@ public class Sala {
     }
     public void setNumeroSala(int numeroSala){
         this.numeroSala = numeroSala;
+    }
+
+    public boolean isEstatPorta() {
+        return estatPorta;
+    }
+
+    public void setEstatPorta(boolean estatPorta) {
+        this.estatPorta = estatPorta;
     }
 }

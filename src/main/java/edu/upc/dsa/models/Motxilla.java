@@ -8,7 +8,8 @@ public class Motxilla {
     public Motxilla(){
     }
 
-    public Motxilla(String idUsuari, String idItem){
+    public Motxilla(String id, String idUsuari, String idItem){
+        this.id = id;
         this.idUsuari=idUsuari;
         this.idItem=idItem;
     }

@@ -2,9 +2,10 @@ package edu.upc.dsa.services;
 
 import edu.upc.dsa.GameManager;
 import edu.upc.dsa.GameManagerImpl;
-import edu.upc.dsa.exception.*;
+import edu.upc.dsa.exception.ItemAlreadyExistsException;
+import edu.upc.dsa.exception.ItemNotFoundException;
+import edu.upc.dsa.exception.MissingDataException;
 import edu.upc.dsa.models.Item;
-import edu.upc.dsa.models.Usuari;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
