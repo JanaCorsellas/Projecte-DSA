@@ -32,9 +32,9 @@ public interface GameManager {
     public List<Formulari> llistaFormularis();
     public void addIssue(String date, String informer, String message) throws MissingDataException;
     public List<Issue> llistaIssues();
-    List<Faq> getAllFaqs();
-    void addFaq(Faq faq);
-    void removeFaq(String faqId);
+    List<Faq> llistaFaqs();
+    public void addFaq(Faq faq);
+    public void removeFaq(String faqId);
 
 
     //mètodes extres

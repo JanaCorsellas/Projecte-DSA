@@ -24,7 +24,7 @@ public class GameManagerImpl implements GameManager {
     protected List<Item> items;
     protected List<Formulari> formularis;
     protected List<Issue> issues;
-    private List<Faq> faqs;
+    protected List<Faq> faqs;
 
     final static Logger logger = Logger.getLogger(GameManagerImpl.class);
 
@@ -72,7 +72,7 @@ public class GameManagerImpl implements GameManager {
                 throw new UserAlreadyExistsException("Aquest nom d'usuari ja existeix: " + nomusuari);
             }
         }
-        if (nom == "" || cognom == "" || nomusuari == "" || password == "" || password2 == "") {
+        if (nom.equals("") || cognom.equals("") || nomusuari.equals("") || password.equals("") || password2.equals("")) {
             throw new MissingDataException("Falten camps per completar");
         } else if (!Objects.equals(password, password2)) {
             throw new IncorrectPasswordException("La contrasenya no coincideix");
@@ -88,7 +88,7 @@ public class GameManagerImpl implements GameManager {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            if (nom == "" || cognom == "" || nomusuari == "" || password == "" || password2 == "") {
+            if (nom.equals("") || cognom.equals("") || nomusuari.equals("") || password.equals("") || password2.equals("")) {
                 throw new MissingDataException("Falten camps per completar");
             }*/
 
@@ -120,9 +120,10 @@ public class GameManagerImpl implements GameManager {
         if (!contrasenyaCorrecte(nomusuari, password)) {
             throw new IncorrectPasswordException("Contrasenya incorrecte");
         }
-        if (nomusuari == "" || password == "") {
+        if (nomusuari.equals("") || password.equals("")) {
             throw new MissingDataException("Completa tots els camps");
         } else {
+            //
             /*Connection conn = null;
                 try {
                     conn = DBUtils.getConnection();
@@ -245,7 +246,7 @@ public class GameManagerImpl implements GameManager {
                 throw new ItemAlreadyExistsException("Aquesta skin ja existeix: " + color);
             }
         }
-        if(color == "" || preu < 0 || descripcio == "" || imatge == ""){
+        if(color.equals("") || preu < 0 || descripcio.equals("") || imatge.equals("")){
             throw new MissingDataException("Falten camps per completar");
         }
         else{
@@ -292,7 +293,7 @@ public class GameManagerImpl implements GameManager {
     //Mètode per escriure i enviar un formulari
     @Override
     public void formulari(String data, String title, String message, String sender) throws MissingDataException {
-        if (data == "" || title == "" || message == "" || sender == ""){
+        if (data.equals("") || title.equals("") || message.equals("") || sender.equals("")){
             throw new MissingDataException("Falten camps per completar");
         }
         else{
@@ -310,7 +311,7 @@ public class GameManagerImpl implements GameManager {
     @Override
     public void addIssue(String date, String informer, String message) throws MissingDataException {
 
-        if(date == "" || informer == "" || message == ""){
+        if(date.equals("") || informer.equals("") || message.equals("")){
             throw new MissingDataException("Falten camps per completar");
         }
         else{
@@ -332,8 +333,8 @@ public class GameManagerImpl implements GameManager {
 
     //Mètode per obtenir una llista de totes les preguntes
     @Override
-    public List<Faq> getAllFaqs() {
-        return faqs;
+    public List<Faq> llistaFaqs() {
+        return new ArrayList<>(faqs);
     }
 
     //Mètode per eliminar una pregunta

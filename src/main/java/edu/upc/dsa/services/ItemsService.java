@@ -98,25 +98,4 @@ public class ItemsService {
             return Response.status(500).entity("Error de validació").build();
         }
     }
-
-    /*@GET
-    @ApiOperation(value = "Llistar items per preu ascendent", notes = "llista dels ítems")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Exitós", response = Item.class, responseContainer = "List"),
-            @ApiResponse(code = 500, message = "Error intern del servidor")
-    })
-    @Path("/llistarItems")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response llistarItemsPerPreuAscendent() {
-        GameManager manager = GameManagerImpl.getInstance();
-
-        try {
-            //obtenir la llista d'ítems odrenats per preu
-            List<Item> itemsOrdenats = manager.llistarItemsPerPreuAscendent();
-            return Response.status(200).entity(itemsOrdenats).build();
-
-        } catch (Exception e) {
-            return Response.status(500).entity("Error intern del servidor").build();
-        }
-    }*/
 }

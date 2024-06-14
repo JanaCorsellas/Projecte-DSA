@@ -164,7 +164,7 @@ public class UsuarisService {
 
         List<Formulari> formularis = this.um.llistaFormularis();
         GenericEntity<List<Formulari>> entity = new GenericEntity<List<Formulari>>(formularis) {};
-        return Response.status(201).entity(entity).build()  ;
+        return Response.status(201).entity(entity).build();
     }
 
     @GET
@@ -181,15 +181,40 @@ public class UsuarisService {
         else return Response.status(201).entity(usuari).build();
     }
 
-    @Path("/FAQs")
+    @GET
+    @ApiOperation(value = "Obtenir una llista de tots els FAQs", notes = "FAQs dels usuaris")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Faq.class, responseContainer="List"),
+    })
+    @Path("/llistaFaqs")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Faq> getFaqs() {
         // Aquí simulamos la obtención de las FAQs desde algún origen de datos
-        List<Faq> faqs = new ArrayList<>();
-        faqs.add(new Faq("f1", "q1"));
-        faqs.add(new Faq("f2", "q2"));
+        List<Faq> faqs = this.um.llistaFaqs();
+        //faqs.add(new Faq("f1", "q1"));
+        //faqs.add(new Faq("f2", "q2"));
         // Agrega más FAQs según sea necesario
-        return faqs;
+        GenericEntity<List<Faq>> entity = new GenericEntity<List<Faq>>(faqs) {};
+        return (List<Faq>) Response.status(201).entity(entity).build();
+    }
 
+    @POST
+    @ApiOperation(value = "Afegir FAQ", notes = "Faq")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Exitós"),
+            @ApiResponse(code = 500, message = "Error de validació")
+
+    })
+    @Path("/addFAQs")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addFAQ(Faq faq) throws MissingDataException{
+        // Aquí simulamos la obtención de las FAQs desde algún origen de datos
+        GameManager manager = GameManagerImpl.getInstance();
+        try{
+            manager.addFaq(faq);
+            return Response.status(201).entity(faq).build();
+        } catch (Exception e){
+            return Response.status(500).entity(faq).build();
+        }
     }
 }
