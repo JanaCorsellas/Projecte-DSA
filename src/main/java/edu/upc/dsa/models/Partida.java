@@ -14,6 +14,9 @@ public class Partida {
     Date data;
     int vidas;
 
+    public Partida(){
+        this.data = new Date();
+    }
     public Partida(String id, String idJugador, int segonsRestants, int vidas) {
         this.timer = new Timer();
         this.segonsRestants = 15 * 60; // Convertir minutos a segundos

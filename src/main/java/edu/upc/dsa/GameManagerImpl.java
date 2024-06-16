@@ -1,14 +1,8 @@
 package edu.upc.dsa;
 
 import edu.upc.dsa.db.DBUtils;
-import edu.upc.dsa.db.orm.Sessio;
-import edu.upc.dsa.db.orm.SessioImpl;
 import edu.upc.dsa.exception.*;
-import edu.upc.dsa.models.Formulari;
-import edu.upc.dsa.models.Issue;
-import edu.upc.dsa.models.Item;
-import edu.upc.dsa.models.Usuari;
-import edu.upc.dsa.models.Faq;
+import edu.upc.dsa.models.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,6 +19,7 @@ public class GameManagerImpl implements GameManager {
     protected List<Formulari> formularis;
     protected List<Issue> issues;
     protected List<Faq> faqs;
+    protected List<Usuari> ranking;
 
     final static Logger logger = Logger.getLogger(GameManagerImpl.class);
 
@@ -34,6 +29,7 @@ public class GameManagerImpl implements GameManager {
         this.formularis = new LinkedList<>();
         this.issues = new LinkedList<>();
         this.faqs = new LinkedList<>();
+        this.ranking = new LinkedList<>();
     }
 
     public static GameManager getInstance() {
@@ -47,8 +43,6 @@ public class GameManagerImpl implements GameManager {
 
         return ret;
     }
-
-
 
     @Override
     public Usuari obtenirUsuariPerNomusuari(String nomUsuari) {
@@ -160,7 +154,6 @@ public class GameManagerImpl implements GameManager {
         }
         return false;
     }
-
     //Mètode per comprovar que la contrasenya proporcionada per l'usuari és la correcte, comparant-la amb la que tenim a la bbdd
     public boolean contrasenyaCorrecte(String nomusuari, String password) {
         Usuari usuari = obtenirUsuariPerNomusuari(nomusuari);
@@ -348,6 +341,17 @@ public class GameManagerImpl implements GameManager {
                 break; // Salir del bucle una vez que se elimina la FAQ
             }
         }
+    }
+    @Override
+    public void addRanking(String nomUsuari, int puntuacio, Date data) {
+        Usuari usuari = new Usuari(nomUsuari, puntuacio);
+        Partida partida = new Partida();
+        ranking.add(usuari);
+    }
+    //Mètode per obtenir una llista de totes les preguntes
+    @Override
+    public List<Usuari> ranking() {
+        return new ArrayList<>(ranking);
     }
 }
 
