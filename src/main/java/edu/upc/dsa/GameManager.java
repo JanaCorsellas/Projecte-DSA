@@ -36,9 +36,9 @@ public interface GameManager {
     public void baixaUsuari(String nomusuari) throws UserNotFoundException, SQLException;
     public Item getItem(String color, int preu, String descripcio, String imatge);
 
-    public void addRanking(String nomUsuari, int puntuacio, Date data);
+    /*public void addRanking(String nomUsuari, int puntuacio, Date data);
 
-    public List<Usuari> ranking();
+    public List<Usuari> ranking();*/
 
 }
 

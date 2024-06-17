@@ -1,7 +1,14 @@
 package edu.upc.dsa;
 
 import edu.upc.dsa.db.DBUtils;
+import edu.upc.dsa.db.orm.Sessio;
+import edu.upc.dsa.db.orm.SessioImpl;
 import edu.upc.dsa.exception.*;
+import edu.upc.dsa.models.Formulari;
+import edu.upc.dsa.models.Issue;
+import edu.upc.dsa.models.Item;
+import edu.upc.dsa.models.Usuari;
+import edu.upc.dsa.models.Faq;
 import edu.upc.dsa.models.*;
 
 import java.sql.Connection;
@@ -9,7 +16,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-
 import org.apache.log4j.Logger;
 
 public class GameManagerImpl implements GameManager {
@@ -342,7 +348,7 @@ public class GameManagerImpl implements GameManager {
             }
         }
     }
-    @Override
+    /*@Override
     public void addRanking(String nomUsuari, int puntuacio, Date data) {
         Usuari usuari = new Usuari(nomUsuari, puntuacio);
         Partida partida = new Partida();
@@ -352,7 +358,7 @@ public class GameManagerImpl implements GameManager {
     @Override
     public List<Usuari> ranking() {
         return new ArrayList<>(ranking);
-    }
+    }*/
 }
 
 
