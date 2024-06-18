@@ -31,7 +31,7 @@ public class DB {
         Connection connection = null;
         try {
             connection = DBUtils.getConnection();
-            String query = "INSERT INTO user (id, nom, cognom, nomusuari, password) VALUES (0, 'nom5', 'cognom1', 'nomusuari1', 'password1')";
+            String query = "INSERT INTO Usuari (id, nom, cognom, nomusuari, password) VALUES (0, 'nom5', 'cognom1', 'nomusuari1', 'password1')";
             try (Statement statement1 = connection.createStatement()) {
                 statement1.execute(query);
             }
@@ -122,7 +122,7 @@ public class DB {
         Connection connection = null;
         try {
             connection = DBUtils.getConnection();
-            String query = "SELECT * FROM user WHERE 1=1";
+            String query = "SELECT * FROM Usuari WHERE 1=1";
             try (Statement statement2 = connection.createStatement();
                  ResultSet rs = statement2.executeQuery(query)) {
                 ResultSetMetaData rsmd = rs.getMetaData();

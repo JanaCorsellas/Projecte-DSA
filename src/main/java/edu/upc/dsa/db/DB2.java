@@ -33,7 +33,7 @@ public class DB2 extends DB{
         Connection connection = null;
         try {
             connection = DBUtils.getConnection();
-            String query = "INSERT INTO user (id, nom, cognom, nomusuari, password) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO Usuari (id, nom, cognom, nomusuari, password) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement statement1 = connection.prepareStatement(query)) {
                 statement1.setInt(1, 1);
                 statement1.setString(2, "nom6");
