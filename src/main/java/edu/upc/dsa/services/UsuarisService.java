@@ -38,7 +38,7 @@ public class UsuarisService {
     @POST
     @ApiOperation(value = "Registrar un nou usuari", notes = "Afegirem un usuari nou")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Exitós", response= Usuari.class),
+            @ApiResponse(code = 201, message = "Exitós", response= UsuariRegistre.class),
             @ApiResponse(code = 409, message = "El nom d'usuari ja existeix"),
             @ApiResponse(code = 401, message = "La contrasenya no coincideix"),
             @ApiResponse(code = 404, message = "Falta completar algun camp"),
@@ -49,7 +49,7 @@ public class UsuarisService {
     @Path("/registreUsuari")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response registreUsuari(Usuari usuari){
+    public Response registreUsuari(UsuariRegistre usuari){
         try {
             GameManager manager = GameManagerImpl.getInstance();
             manager.registreUsuari(usuari.getNom(), usuari.getCognom(), usuari.getNomusuari(), usuari.getPassword(), usuari.getPassword2());

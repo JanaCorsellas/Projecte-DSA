@@ -9,35 +9,29 @@ import java.sql.SQLException;
 
 public class FactorySession {
 
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/dsa";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "janacorsellas";
+
     public static Connection getConnection() {
-        String db = DBUtils.getDb();
-        String host = DBUtils.getDbHost();
-        String port = DBUtils.getDbPort();
-        String user = DBUtils.getDbUser();
-        String pass = DBUtils.getDbPasswd();
-
-
-        Connection connection = null;
+        Connection conn = null;
         try {
-            DriverManager.getConnection("jdbc:mariadb://" + host + ":" + port + "/" +
-                    db + "?user=" + user + "&password=" + pass);
-            System.out.println("jdbc:mariadb://" + host + ":" + port + "/" +
-                    db + "?user=" + user + "&password=" + pass);
-        } catch (Exception e) {
-            e.printStackTrace();
+            conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        } catch (SQLException ex) {
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
         }
-
-        return connection;
+        return conn;
     }
 
     public static Sessio openSession() {
-        Connection conn = null;
-        try {
-            conn = DBUtils.getConnection(); // Asume que DBUtils tiene el método para obtener la conexión
-        } catch (SQLException e) {
-            e.printStackTrace();
+        Connection conn = getConnection();
+        if (conn != null) {
+            return new SessioImpl(conn);
+        } else {
+            throw new IllegalStateException("Unable to establish a database connection.");
         }
-        return new SessioImpl(conn);
     }
 
 }

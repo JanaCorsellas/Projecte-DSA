@@ -19,7 +19,7 @@ public interface GameManager {
     public void registreUsuari(String nom, String cognom, String nomusuari, String password, String password2) throws UserAlreadyExistsException, IncorrectPasswordException, MissingDataException, SQLException;
     public List<Usuari> llistaUsuaris();
     public boolean usuariExisteix(String nomUsuari);
-    void login(String nomusuari, String password) throws UserNotFoundException, IncorrectPasswordException, MissingDataException;
+    void login(String nomusuari, String password) throws UserNotFoundException, IncorrectPasswordException, MissingDataException, SQLException;
     public Item obtenirItemPerColor(String color);
     public void addItem(String color, int preu, String descripcio, String imatge) throws MissingDataException, ItemAlreadyExistsException;
     public void delItem(String color) throws MissingDataException, ItemNotFoundException;
