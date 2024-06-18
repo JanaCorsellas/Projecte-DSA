@@ -7,7 +7,7 @@ public class Usuari {
     String nomusuari;
     String password;
     String password2;
-    double coins;
+    int coins;
     boolean clau;
     String skin;
     int puntuacio;
@@ -67,10 +67,10 @@ public class Usuari {
         this.password2 = password2;
     }
 
-    public double getCoins(){
+    public int getCoins(){
         return coins;
     }
-    public void setCoins(double coins){
+    public void setCoins(int coins){
         this.coins = coins;
     }
 

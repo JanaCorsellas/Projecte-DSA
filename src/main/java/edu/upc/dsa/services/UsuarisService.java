@@ -49,7 +49,7 @@ public class UsuarisService {
     @Path("/registreUsuari")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response registreUsuari(UsuariRegistre usuari){
+    public Response registreUsuari(Usuari usuari){
         try {
             GameManager manager = GameManagerImpl.getInstance();
             manager.registreUsuari(usuari.getNom(), usuari.getCognom(), usuari.getNomusuari(), usuari.getPassword(), usuari.getPassword2());

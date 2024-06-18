@@ -9,7 +9,7 @@ public interface UsuariDAO {
 
     public int addUsuari(String nom, String cognom, String nomusuari, String password, String password2);
     public Usuari getUsuari(int usuariID);
-    public void updateUsuari(int usuariID, String name, String surname, double salary);
+    public void updateUsuari(int usuariID, String name, String surname, int salary);
     public void deleteUsuari(int usuariID);
     public List<Object> getUsuaris();
     public List <Object> getUsuariByDept(int deptId);

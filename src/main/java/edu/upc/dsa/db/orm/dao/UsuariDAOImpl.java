@@ -59,7 +59,7 @@ public class UsuariDAOImpl implements UsuariDAO {
     }
 
     @Override
-    public void updateUsuari(int usuariID, String name, String surname, double salary) {
+    public void updateUsuari(int usuariID, String name, String surname, int salary) {
         Sessio session = null;
         try {
             session = FactorySession.openSession();

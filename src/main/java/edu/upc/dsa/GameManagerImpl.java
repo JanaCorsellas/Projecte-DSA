@@ -117,7 +117,7 @@ public class GameManagerImpl implements GameManager {
                 pstm.setString(3, nomusuari);
                 pstm.setString(4, password);
                 pstm.setString(5, password2);
-                pstm.setDouble(6, 0.0); // Inicializa coins a 0
+                pstm.setInt(6, 0); // Inicializa coins a 0
                 pstm.setBoolean(7, false); // Inicializa clau a false
                 pstm.setString(8, "Verd"); // Inicializa skin a "Verd"
                 pstm.setInt(9, 0); // Inicializa puntuacio a 0
