@@ -55,7 +55,7 @@ public class GameManagerImpl implements GameManager {
             }
         }
         return null;*/
-        String query = "SELECT * FROM usuari WHERE nomusuari = ?";
+        String query = "SELECT * FROM Usuari WHERE nomusuari = ?";
         try (Connection conn = DBUtils.getConnection();
              PreparedStatement pstm = conn.prepareStatement(query)) {
 
@@ -81,7 +81,7 @@ public class GameManagerImpl implements GameManager {
     @Override
     public List<Item> findAll() {
         List<Item> items = new ArrayList<>();
-        String query = "SELECT * FROM item";
+        String query = "SELECT * FROM Item";
         try (Connection conn = DBUtils.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
@@ -108,7 +108,7 @@ public class GameManagerImpl implements GameManager {
         } else if (!password.equals(password2)) {
             throw new IncorrectPasswordException("La contrasenya no coincideix");
         } else {
-            String query = "INSERT INTO usuari (nom, cognom, nomusuari, password, password2, coins, clau, skin, puntuacio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO Usuari (nom, cognom, nomusuari, password, password2, coins, clau, skin, puntuacio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (Connection conn = DBUtils.getConnection();
                  PreparedStatement pstm = conn.prepareStatement(query)) {
 
@@ -139,7 +139,7 @@ public class GameManagerImpl implements GameManager {
             throw new MissingDataException("Completa tots els camps");
         }
 
-        String query = "SELECT * FROM usuari WHERE nomusuari = ?";
+        String query = "SELECT * FROM Usuari WHERE nomusuari = ?";
         //Usuari usuari;
         try (Connection conn = DBUtils.getConnection();
              PreparedStatement pstm = conn.prepareStatement(query)) {
@@ -173,7 +173,7 @@ public class GameManagerImpl implements GameManager {
     @Override
     public List<Usuari> llistaUsuaris() {
         List<Usuari> usuaris = new ArrayList<>();
-        String query = "SELECT * FROM usuari";
+        String query = "SELECT * FROM Usuari";
         try (Connection conn = DBUtils.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
@@ -217,7 +217,7 @@ public class GameManagerImpl implements GameManager {
     }
 
     public Integer getUserId(String username, String password) {
-        String query = "SELECT id FROM usuari WHERE nomusuari = ? AND password = ?";
+        String query = "SELECT id FROM Usuari WHERE nomusuari = ? AND password = ?";
 
         try (Connection conn = DBUtils.getConnection();
              PreparedStatement pstm = conn.prepareStatement(query)) {
@@ -229,7 +229,7 @@ public class GameManagerImpl implements GameManager {
                 if (rs.next()) {
                     return rs.getInt("id");
                 } else {
-                    throw new IllegalArgumentException("Usuario o contraseña incorrectos");
+                    throw new IllegalArgumentException("Usuari o contrasenya incorrectes");
                 }
             }
 
@@ -259,7 +259,7 @@ public class GameManagerImpl implements GameManager {
             logger.warn("No s'ha trobat l'usuari " + nomusuari);
             throw new UserNotFoundException("L'usuari no existeix: " + nomusuari);
         } else {
-            String query = "DELETE FROM usuari WHERE nomusuari = ?";
+            String query = "DELETE FROM Usuari WHERE nomusuari = ?";
             try (Connection conn = DBUtils.getConnection();
                  PreparedStatement pstm = conn.prepareStatement(query)) {
 
@@ -297,7 +297,7 @@ public class GameManagerImpl implements GameManager {
         if (color.isEmpty() || preu < 0 || descripcio.isEmpty() || imatge.isEmpty()) {
             throw new MissingDataException("Falten camps per completar");
         } else {
-            String query = "INSERT INTO item (color, preu, descripcio, imatge) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO Item (color, preu, descripcio, imatge) VALUES (?, ?, ?, ?)";
             try (Connection conn = DBUtils.getConnection();
                  PreparedStatement pstm = conn.prepareStatement(query)) {
 
