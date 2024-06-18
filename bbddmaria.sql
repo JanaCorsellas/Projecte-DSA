@@ -22,7 +22,7 @@ USE `scaperoom`;
 
 -- Dumping structure for table scaperoom.item
 DROP TABLE IF EXISTS `item`;
-CREATE TABLE IF NOT EXISTS `Item` (
+CREATE TABLE IF NOT EXISTS `item` (
   `id` varchar(50) NOT NULL,
   `color` varchar(50) DEFAULT NULL,
   `preu` int(11) DEFAULT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `Item` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='taula que guarda la llista de productes de la botiga';
 
 -- Dumping data for table scaperoom.item: ~4 rows (approximately)
-INSERT INTO `Item` (`id`, `color`, `preu`, `descripcio`, `imatge`) VALUES
+INSERT INTO `item` (`id`, `color`, `preu`, `descripcio`, `imatge`) VALUES
 	('1', 'vermell', 1, 'Guanyes una vida', NULL),
 	('2', 'verd', 2, 'Tens més temps', '(NULL)'),
 	('3', 'groc', 3, 'Obtens una pista', NULL),
@@ -40,7 +40,7 @@ INSERT INTO `Item` (`id`, `color`, `preu`, `descripcio`, `imatge`) VALUES
 
 -- Dumping structure for table scaperoom.motxilla
 DROP TABLE IF EXISTS `motxilla`;
-CREATE TABLE IF NOT EXISTS `Motxilla` (
+CREATE TABLE IF NOT EXISTS `motxilla` (
   `id` varchar(50) NOT NULL,
   `idUsuari` varchar(50) DEFAULT NULL,
   `idItem` varchar(50) DEFAULT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `Motxilla` (
 
 -- Dumping structure for table scaperoom.partida
 DROP TABLE IF EXISTS `partida`;
-CREATE TABLE IF NOT EXISTS `Partida` (
+CREATE TABLE IF NOT EXISTS `partida` (
   `id` varchar(50) NOT NULL,
   `idJugador` varchar(50) DEFAULT NULL,
   `timer` time DEFAULT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `Partida` (
 
 -- Dumping structure for table scaperoom.sala
 DROP TABLE IF EXISTS `sala`;
-CREATE TABLE IF NOT EXISTS `Sala` (
+CREATE TABLE IF NOT EXISTS `sala` (
   `id` varchar(50) NOT NULL,
   `numeroSala` int(11) DEFAULT NULL,
   `estatPorta` tinyint(4) DEFAULT NULL,
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `Sala` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='taula que guarda la llista de sales';
 
 -- Dumping data for table scaperoom.sala: ~4 rows (approximately)
-INSERT INTO `Sala` (`id`, `numeroSala`, `estatPorta`) VALUES
+INSERT INTO `sala` (`id`, `numeroSala`, `estatPorta`) VALUES
 	('1', 1, NULL),
 	('2', 2, NULL),
 	('3', 3, NULL),
@@ -81,14 +81,14 @@ INSERT INTO `Sala` (`id`, `numeroSala`, `estatPorta`) VALUES
 
 -- Dumping structure for table scaperoom.usuari
 DROP TABLE IF EXISTS `usuari`;
-CREATE TABLE IF NOT EXISTS `Usuari` (
+CREATE TABLE IF NOT EXISTS `usuari` (
   `id` varchar(50) NOT NULL,
   `nom` varchar(50) DEFAULT NULL,
   `cognom` varchar(50) DEFAULT NULL,
   `nomusuari` varchar(50) DEFAULT NULL,
   `password1` varchar(50) DEFAULT NULL,
   `password2` varchar(50) DEFAULT NULL,
-  `coins` double DEFAULT NULL,
+  `coins` int(11) DEFAULT NULL,
   `clau` tinyint(4) DEFAULT NULL,
   `skin` varchar(50) DEFAULT NULL,
   `puntuacio` int(50) DEFAULT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `Usuari` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='taula que guarda la llista d''usuaris registrats';
 
 -- Dumping data for table scaperoom.usuari: ~4 rows (approximately)
-INSERT INTO `Usuari` (`id`, `nom`, `cognom`, `nomusuari`, `password1`, `password2`, `coins`, `clau`, `skin`, `puntuacio`) VALUES
+INSERT INTO `usuari` (`id`, `nom`, `cognom`, `nomusuari`, `password1`, `password2`, `coins`, `clau`, `skin`, `puntuacio`) VALUES
 	('1', 'Daniel', 'Perez', 'dperez', '111', '111', 0, NULL, 'verd', NULL),
 	('2', 'Carla', 'Otero', 'cotero', '222', '222', 0, NULL, 'verd', NULL),
 	('3', 'Andrea', 'Zapata', 'azapata', '333', '333', 0, NULL, 'verd', NULL),
