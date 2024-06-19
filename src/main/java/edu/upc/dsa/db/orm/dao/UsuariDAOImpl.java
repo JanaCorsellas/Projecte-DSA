@@ -118,7 +118,7 @@ public class UsuariDAOImpl implements UsuariDAO {
 
     }
 
-    public Item getItem(String color) throws ItemNotFoundException{
+    /*public Item getItem(String color) throws ItemNotFoundException{
         Sessio session = null;
         Item item = null;
         try {
@@ -128,7 +128,7 @@ public class UsuariDAOImpl implements UsuariDAO {
                 throw new ItemNotFoundException("Item no trobat.");
             }
         }
-    }
+    }*/
 
 /*
     public void updateUsuari(int usuariID, String name, String surname, int salary) {

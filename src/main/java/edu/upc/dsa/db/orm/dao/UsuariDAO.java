@@ -17,7 +17,7 @@ public interface UsuariDAO {
 
     public Usuari getUsuari(String nomusuari) throws UserNotFoundException;
     public List<Usuari> llistaUsuarisDAO();
-    public Item getItem(String color) throws ItemNotFoundException;
+    //public Item getItem(String color) throws ItemNotFoundException;
 }
     /*
     public void updateUsuari(int employeeID, String name, String surname, double salary);
