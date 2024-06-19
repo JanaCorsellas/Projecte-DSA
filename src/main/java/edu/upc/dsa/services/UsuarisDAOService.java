@@ -2,10 +2,7 @@ package edu.upc.dsa.services;
 
 import edu.upc.dsa.db.orm.dao.UsuariDAO;
 import edu.upc.dsa.db.orm.dao.UsuariDAOImpl;
-import edu.upc.dsa.exception.IncorrectPasswordException;
-import edu.upc.dsa.exception.MissingDataException;
-import edu.upc.dsa.exception.UserAlreadyExistsException;
-import edu.upc.dsa.exception.UserNotFoundException;
+import edu.upc.dsa.exception.*;
 import edu.upc.dsa.models.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -85,6 +82,21 @@ public class UsuarisDAOService {
         }
     }
 
+
+    @GET
+    @ApiOperation(value = "Obtenir una llista de tots els usuaris", notes = "Usuaris de la presó")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Usuari.class, responseContainer="List"),
+    })
+    @Path("/llistaUsuarisDAO")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUsuaris() {
+
+        List<Usuari> usuaris = this.ud.llistaUsuarisDAO();
+        GenericEntity<List<Usuari>> entity = new GenericEntity<List<Usuari>>(usuaris) {};
+        return Response.status(201).entity(entity).build()  ;
+    }
+
     @GET
     @ApiOperation(value = "Obtenir perfil a partir del nomUsuari", notes = "Perfil del jugador")
     @ApiResponses(value = {
@@ -103,16 +115,40 @@ public class UsuarisDAOService {
     }
 
     @GET
-    @ApiOperation(value = "Obtenir una llista de tots els usuaris", notes = "Usuaris de la presó")
+    @ApiOperation(value = "Obtenir perfil a partir del nomUsuari", notes = "Perfil del jugador")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful", response = Usuari.class, responseContainer="List"),
+            @ApiResponse(code = 201, message = "Successful", response = Usuari.class),
+            @ApiResponse(code = 404, message = "Track not found")
     })
-    @Path("/llistaUsuarisDAO")
+    @Path("/getItemDAO/{color}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUsuaris() {
+    public Response getItem(@PathParam("color") String color) {
+        try{
+            Item i = this.ud.getItem(color);
+            return Response.status(201).entity(i).build();
+        } catch (ItemNotFoundException e){
+            return Response.status(404).entity(e.getMessage()).build();
+        }
+    }
 
-        List<Usuari> usuaris = this.ud.llistaUsuarisDAO();
-        GenericEntity<List<Usuari>> entity = new GenericEntity<List<Usuari>>(usuaris) {};
-        return Response.status(201).entity(entity).build()  ;
+    @POST
+    @ApiOperation(value = "Comprar Item", notes = "Permet comprar un item si tens suficients diners")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Usuari.class),
+            @ApiResponse(code = 400, message = "Falten diners per comprar l'item"),
+            @ApiResponse(code = 404, message = "Usuari o item no trobat")
+    })
+    @Path("/comprarItemDAO/{nomusuari} {color}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response comprarItem(@QueryParam("nomusuari") String nomusuari, @QueryParam("color") String color) {
+        try {
+            Usuari u = this.ud.comprarItem(nomusuari, color);
+            return Response.status(201).entity(u).build();
+        } catch (MissingDataException e) {
+            return Response.status(400).entity(e.getMessage()).build();
+        } catch (UserNotFoundException | ItemNotFoundException e) {
+            return Response.status(404).entity(e.getMessage()).build();
+        }
     }
 }

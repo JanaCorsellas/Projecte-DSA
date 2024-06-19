@@ -94,30 +94,49 @@ font-weight: bold; /* Utiliza la misma negrita que otros elementos */
             <h2><strong>Hola, </strong><span id="nomusuari"></span><strong> !</strong></h2>
             <br>
             <p><strong>Nom: </strong><span id="nom"></span></p>
-            <p><strong>Cognom: </strong><span id="cognom">-</span></p>
+            <p><strong>Cognom: </strong><span id="cognom"></span></p>
             <br>
-            <p><strong>Diners:</strong><span id="coins"></span></p>
+            <p><strong>Diners:</strong><span id="coins"></span><strong>€</strong></p>
         </div>
     </div>
 
 </div>
 
 
-<div class="btn">INICIAR PARTIDA</div>
+<div class="btn">COMPRAR SKINS</div>
 
 <script>
-    // Recuperar del almacenamiento local
+$(document).ready(function() {
+    // Función para obtener el perfil del usuario
+    function obtenerPerfil(nomusuari) {
+        $.ajax({
+            url: "/dsaApp/usuarisDAO/getPerfilDAO/" + nomusuari,
+            method: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            success: function(data) {
+                // Actualizar los elementos HTML con los datos del perfil obtenidos
+                $("#nomusuari").text(data.nomusuari);
+                $("#nom").text(data.nom); // Asegúrate de que los atributos coincidan con tu modelo Usuari
+                $("#cognom").text(data.cognom);
+                $("#coins").text(data.coins); // Si hay un atributo coins en tu modelo Usuari
+            },
+            error: function(xhr, status, error) {
+                if (xhr.status === 404) {
+                    alert("Usuari no trobat");
+                } else {
+                    alert("Error desconegut: " + xhr.responseText);
+                }
+            }
+        });
+    }
+
+    // Evento para obtener y mostrar el perfil del usuario al cargar la página
+    // Esto dependerá de cómo obtienes el nombre de usuario, aquí lo asumo de localStorage
     var nomusuari = localStorage.getItem('nomusuari');
-    var nom = localStorage.getItem('nom');
-    var cognom = localStorage.getItem('cognom');
-    var coins = localStorage.getItem('coins');
+    obtenerPerfil(nomusuari);
+});
 
-    document.getElementById('nomusuari').textContent = nomusuari;
-    document.getElementById('nom').textContent = nom;
-    document.getElementById('cognom').textContnt = cognom;
-    document.getElementById('coins').textContnt = coins;
-
-    </script>
-
+</script>
 </body>
 </html>

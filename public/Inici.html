@@ -198,7 +198,7 @@
     });
     // Mostrar modal de la usuaris cuando se hace clic en USUARIS
     $("#usuaris_button").click(function() {
-        $.get("/dsaApp/usuaris/llistaUsuaris", function(data) {
+        $.get("/dsaApp/usuarisDAO/llistaUsuarisDAO", function(data) {
             // Limpiar la tabla de usuarios
             $("#tabla-usuarios tbody").empty();
             // Recorrer la lista de usuarios y agregar cada uno a la tabla

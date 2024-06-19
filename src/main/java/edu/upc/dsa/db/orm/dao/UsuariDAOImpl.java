@@ -1,10 +1,8 @@
 package edu.upc.dsa.db.orm.dao;
 
 import edu.upc.dsa.db.orm.FactorySession;
-import edu.upc.dsa.exception.IncorrectPasswordException;
-import edu.upc.dsa.exception.MissingDataException;
-import edu.upc.dsa.exception.UserAlreadyExistsException;
-import edu.upc.dsa.exception.UserNotFoundException;
+import edu.upc.dsa.exception.*;
+import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
 import edu.upc.dsa.db.orm.Sessio;
 import edu.upc.dsa.models.UsuariLogin;
@@ -118,7 +116,7 @@ public class UsuariDAOImpl implements UsuariDAO {
 
     }
 
-    /*public Item getItem(String color) throws ItemNotFoundException{
+    public Item getItem(String color) throws ItemNotFoundException {
         Sessio session = null;
         Item item = null;
         try {
@@ -128,7 +126,62 @@ public class UsuariDAOImpl implements UsuariDAO {
                 throw new ItemNotFoundException("Item no trobat.");
             }
         }
-    }*/
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            assert session != null;
+            session.close();
+        }
+        return item;
+    }
+
+    public boolean dinersSuficient(String nomUsuari, String itemColor) {
+        try {
+            Usuari usuari = getUsuari(nomUsuari);
+            Item item = getItem(itemColor);
+            return usuari.getCoins() >= item.getPreu();
+        } catch (UserNotFoundException | ItemNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Usuari comprarItem(String nomUsuari, String itemColor) throws MissingDataException, UserNotFoundException, ItemNotFoundException {
+        Sessio session = null;
+        try {
+            session = FactorySession.openSession();
+            Usuari usuari = (Usuari) session.get(Usuari.class, "nomusuari", nomUsuari);
+            Item item = (Item) session.get(Item.class, "color", itemColor);
+
+            if (usuari == null) {
+                throw new UserNotFoundException("Usuari no trobat.");
+            }
+            if (item == null) {
+                throw new ItemNotFoundException("Item no trobat.");
+            }
+
+            if (usuari.getCoins() >= item.getPreu()) {
+                // Restar los dineros y actualizar la skin del usuario
+                int diners = usuari.getCoins() - item.getPreu();
+                usuari.setCoins(diners);
+                usuari.setSkin(itemColor);
+
+                // Actualizar el usuario en la base de datos
+                session.update(diners, itemColor, nomUsuari);
+                return usuari;
+            } else {
+                throw new MissingDataException("Falten diners per poder comprar l'Item");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new MissingDataException("Error al comprar l'Item");
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
 
 /*
     public void updateUsuari(int usuariID, String name, String surname, int salary) {

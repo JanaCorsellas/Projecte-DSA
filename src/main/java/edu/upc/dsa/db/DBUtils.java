@@ -8,8 +8,8 @@ public class DBUtils {
 
     public static final String DB_NAME = "scaperoom";
     public static final String DB_HOST = "127.0.0.1";
-    public static final String DB_USER = "root";
-    public static final String DB_PASS = "Mazinger72";
+    public static final String DB_USER = "scapeUser";
+    public static final String DB_PASS = "sc4p3r00m";
     public static final String DB_PORT = "3306";
 
     public static String getDb() {

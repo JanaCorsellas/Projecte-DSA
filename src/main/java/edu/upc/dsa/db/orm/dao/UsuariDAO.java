@@ -1,10 +1,8 @@
 
 package edu.upc.dsa.db.orm.dao;
 
-import edu.upc.dsa.exception.IncorrectPasswordException;
-import edu.upc.dsa.exception.MissingDataException;
-import edu.upc.dsa.exception.UserAlreadyExistsException;
-import edu.upc.dsa.exception.UserNotFoundException;
+import edu.upc.dsa.exception.*;
+import edu.upc.dsa.models.Item;
 import edu.upc.dsa.models.Usuari;
 import edu.upc.dsa.models.UsuariLogin;
 
@@ -17,7 +15,9 @@ public interface UsuariDAO {
 
     public Usuari getUsuari(String nomusuari) throws UserNotFoundException;
     public List<Usuari> llistaUsuarisDAO();
-    //public Item getItem(String color) throws ItemNotFoundException;
+    public Item getItem(String color) throws ItemNotFoundException;
+    public boolean dinersSuficient(String nomUsuari, String itemColor);
+    public Usuari comprarItem(String nomUsuari, String itemColor) throws MissingDataException, UserNotFoundException, ItemNotFoundException;
 }
     /*
     public void updateUsuari(int employeeID, String name, String surname, double salary);

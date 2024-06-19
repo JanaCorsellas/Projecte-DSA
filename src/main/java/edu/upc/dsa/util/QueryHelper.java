@@ -2,6 +2,7 @@ package edu.upc.dsa.util;
 
 import edu.upc.dsa.util.ObjectHelper;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -62,6 +63,31 @@ public class QueryHelper {
         StringBuffer sb = new StringBuffer();
         sb.append("SELECT * FROM ").append(theClass.getSimpleName());
 
+        return sb.toString();
+    }
+
+    /*public static String createQueryUPDATE(Object object) {
+        StringBuilder query = new StringBuilder("UPDATE ");
+        query.append(object.getClass().getSimpleName()).append(" SET ");
+
+        Field[] fields = object.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            if (!field.getName().equals("id")) { // Assuming 'id' is the primary key and shouldn't be updated
+                query.append(field.getName()).append(" = ?, ");
+            }
+        }
+
+        query.setLength(query.length() - 2); // Remove last comma and space
+        query.append(" WHERE id = ?"); // Assuming 'id' is the primary key
+
+        return query.toString();
+    }*/
+
+    public static String createQueryUPDATE() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("UPDATE Usuari ");
+        sb.append("SET coins = ?, skin = ? ");
+        sb.append("WHERE nomusuari = ?");
         return sb.toString();
     }
 }

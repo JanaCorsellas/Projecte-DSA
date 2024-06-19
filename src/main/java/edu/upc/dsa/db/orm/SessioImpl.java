@@ -116,8 +116,24 @@ public class SessioImpl implements Sessio {
         return null;
     }*/
 
-    public void update(Object object) {
-
+    public void update(int saldo, String novaSkin, String nomUsuari) throws SQLException {
+        String query = QueryHelper.createQueryUPDATE();
+        PreparedStatement pstm = null;
+        try {
+            pstm = conn.prepareStatement(query);
+            pstm.setInt(1, saldo);
+            pstm.setString(2, novaSkin);
+            pstm.setString(3, nomUsuari);
+            pstm.executeUpdate();
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new SQLIntegrityConstraintViolationException();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (pstm != null) {
+                pstm.close();
+            }
+        }
     }
 
     public void delete(Object object) {
