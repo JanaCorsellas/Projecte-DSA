@@ -86,6 +86,23 @@ public class UsuarisDAOService {
     }
 
     @GET
+    @ApiOperation(value = "Obtenir perfil a partir del nomUsuari", notes = "Perfil del jugador")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Usuari.class),
+            @ApiResponse(code = 404, message = "Track not found")
+    })
+    @Path("/getPerfilDAO/{nomusuari}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPerfil(@PathParam("nomusuari") String nomusuari) {
+        try{
+            Usuari u = this.ud.getUsuari(nomusuari);
+            return Response.status(201).entity(u).build();
+        } catch (UserNotFoundException e){
+            return Response.status(404).entity(e.getMessage()).build();
+        }
+    }
+
+    @GET
     @ApiOperation(value = "Obtenir una llista de tots els usuaris", notes = "Usuaris de la presó")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Usuari.class, responseContainer="List"),

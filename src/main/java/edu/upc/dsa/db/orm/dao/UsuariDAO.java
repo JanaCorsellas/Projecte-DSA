@@ -15,8 +15,9 @@ public interface UsuariDAO {
     public void addUsuari(String nom, String cognom, String nomusuari, String password, String password2, int coins) throws MissingDataException, IncorrectPasswordException, UserAlreadyExistsException;
     public UsuariLogin loginUsuari(String nomusuari, String password) throws MissingDataException, UserNotFoundException, IncorrectPasswordException;
 
-    public Usuari getUsuari(int employeeID);
+    public Usuari getUsuari(String nomusuari) throws UserNotFoundException;
     public List<Usuari> llistaUsuarisDAO();
+    public Item getItem(String color) throws ItemNotFoundException;
 }
     /*
     public void updateUsuari(int employeeID, String name, String surname, double salary);

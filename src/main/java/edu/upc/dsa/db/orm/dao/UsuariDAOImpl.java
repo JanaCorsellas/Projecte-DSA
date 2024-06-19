@@ -35,6 +35,7 @@ public class UsuariDAOImpl implements UsuariDAO {
             try {
                 session = FactorySession.openSession();
                 Usuari usuari = new Usuari(nom, cognom, nomusuari, password, password2, coins);
+                usuari.setCoins(20);
                 session.save(usuari);
             } catch (SQLIntegrityConstraintViolationException e) {
                 throw new UserAlreadyExistsException("Aquest nom d'usuari ja existeix.");
@@ -78,22 +79,6 @@ public class UsuariDAOImpl implements UsuariDAO {
         return credencials;
     }
 
-
-    public Usuari getUsuari(int usuariID) {
-        Sessio session = null;
-        Usuari usuari = null;
-        try {
-            session = FactorySession.openSession();
-            //usuari = (Usuari) session.get(Usuari.class, usuariID);
-        } catch (Exception e) {
-            // LOG
-        } finally {
-            session.close();
-        }
-
-        return usuari;
-    }
-
     public List<Usuari> llistaUsuarisDAO(){
         Sessio session = null;
         List<Usuari> usuaris=null;
@@ -109,6 +94,40 @@ public class UsuariDAOImpl implements UsuariDAO {
             session.close();
         }
         return usuaris;
+    }
+
+    @Override
+    public Usuari getUsuari(String nomusuari) throws UserNotFoundException {
+        Sessio session = null;
+        Usuari usuari = null;
+        try {
+            session = FactorySession.openSession();
+            usuari = (Usuari) session.get(Usuari.class, "nomusuari", nomusuari);
+            if (usuari == null) {
+                throw new UserNotFoundException("Usuari no trobat.");
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            assert session != null;
+            session.close();
+        }
+        return usuari;
+
+    }
+
+    public Item getItem(String color) throws ItemNotFoundException{
+        Sessio session = null;
+        Item item = null;
+        try {
+            session = FactorySession.openSession();
+            item = (Item) session.get(Item.class, "color", color);
+            if (item == null) {
+                throw new ItemNotFoundException("Item no trobat.");
+            }
+        }
     }
 
 /*
