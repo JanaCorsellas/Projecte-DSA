@@ -24,7 +24,6 @@ public class DB2 extends DB{
 
         statement1.execute();
 
-
         connection.close();
 
     }
@@ -34,20 +33,6 @@ public class DB2 extends DB{
     public static void main(String[] args) throws Exception {
         insert();
         findAll();
-
-        // ORM (Object Relation Mapping) --> DAO (Data Access Object)
-
-/*
-        User u = new User("Toni");
-        s.save(u); =====================> "INSERT INTO USER ...."
-        u.setName("Juan");
-        s.update(u); ====> "UPDATE xxx"
-
-        s.save(new Object("Escudo")):; //"INSERT NTO Object
-        s.save(new Mapa("Escudo")):;   // INSERT INTO Mapa
-*/
-
-
     }
 
 }

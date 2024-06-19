@@ -11,27 +11,7 @@ public class DB {
         statement1.execute("INSERT INTO Usuari (id, nom, cognom, nomusuari, password) VALUES (0,'nom5', 'cognom1', 'nomusuari1', 'password1')");
         // i = x / 0
         connection.close();
-
-/*
-        Connection connection=null;
-        try {
-            connection = DBUtils.getConnection();
-
-
-            Statement statement1  = connection.createStatement();
-            statement1.execute("INSERT INTO User (ID, lastName, firstName, address, city) VALUES (0,'88888', 'thMceF\'irstName', 'theAddress', 'theCity')");
-            //connection.close();
-
-        }
-        catch (Exception e) {
-           // ...
-        }
-        finally {
-            connection.close();
-        }
-*/
     }
-
 
     private static String getType (int type) {
         String ret = null;
@@ -78,13 +58,6 @@ public class DB {
                 nomusuari = (String) rs.getObject(4);
                 password = (String) rs.getObject(5);
                 System.out.println(id+" "+nom+" "+nomusuari+" "+cognom+" "+password);
-
-                // Per cada propietat dins de la fila:
-                // while (j<=rsmd.getNumColumn()) {
-                     // theValue = rs.getObject(j);
-                     // theProperty = rsmd.getColumnName(j);
-                     // ObjectHelper.setter(theObject, theProperty, theValue);
-                // }
             }
         } catch (Exception e) {
             //log.d ("", e)

@@ -15,6 +15,5 @@ public interface Sessio {
     void update(int saldo, String novaSkin, String nomUsuari) throws SQLException;                                  // crUd
     void delete(Object object);                                         // cruD
     public <T> List<T> findAll(Class theClass);                               // cR
-    //List<Object> findAll(Class theClass, HashMap params);
     List<Object> query(String query, Class theClass, HashMap params);
 }

@@ -55,7 +55,6 @@ public class QueryHelper {
             sb.append(" AND "+key+"=?");
         }
 
-
         return sb.toString();
     }
 
@@ -65,23 +64,6 @@ public class QueryHelper {
 
         return sb.toString();
     }
-
-    /*public static String createQueryUPDATE(Object object) {
-        StringBuilder query = new StringBuilder("UPDATE ");
-        query.append(object.getClass().getSimpleName()).append(" SET ");
-
-        Field[] fields = object.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            if (!field.getName().equals("id")) { // Assuming 'id' is the primary key and shouldn't be updated
-                query.append(field.getName()).append(" = ?, ");
-            }
-        }
-
-        query.setLength(query.length() - 2); // Remove last comma and space
-        query.append(" WHERE id = ?"); // Assuming 'id' is the primary key
-
-        return query.toString();
-    }*/
 
     public static String createQueryUPDATE() {
         StringBuffer sb = new StringBuffer();

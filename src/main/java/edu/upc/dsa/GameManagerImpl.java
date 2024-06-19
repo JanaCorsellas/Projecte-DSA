@@ -81,31 +81,6 @@ public class GameManagerImpl implements GameManager {
             Usuari usuari = new Usuari(nom, cognom, nomusuari, password, password2, coins);
             usuari.setCoins(20);
             this.usuaris.add(usuari);
-
-            /*try {
-                Connection conn = DBUtils.getConnection();
-                Sessio session = new SessioImpl(conn);
-                session.save(usuari); // INSERT INTO usuari (idXXX, pepito, ...)
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            if (nom.equals("") || cognom.equals("") || nomusuari.equals("") || password.equals("") || password2.equals("")) {
-                throw new MissingDataException("Falten camps per completar");
-            }*/
-
-//        if (password.equals(password2)) {
-//            // Las contraseñas coinciden, procedemos con la inserción en la base de datos
-//            try {
-//                Connection conn = DBUtils.getConnection();
-//                Sessio session = new SessioImpl(conn);
-//                session.save(usuari); // INSERT INTO usuari (idXXX, pepito, ...)
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            // Las contraseñas no coinciden, manejar el error
-//            throw new IncorrectPasswordException("La contrasenya no coincideix");
-//        }
         }
 
     }
@@ -124,24 +99,6 @@ public class GameManagerImpl implements GameManager {
         if (nomusuari.equals("") || password.equals("")) {
             throw new MissingDataException("Completa tots els camps");
         } else {
-            //
-            /*Connection conn = null;
-                try {
-                    conn = DBUtils.getConnection();
-                    Sessio session = new SessioImpl(conn);
-                    Usuari e = (Usuari) session.get(Usuari.class, getUserId(nomusuari, password));
-                    System.out.println("id:" + getUserId(nomusuari, password));
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        if (conn != null) {
-                            conn.close();
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }*/
             logger.info("Has iniciat sessió");
         }
     }
@@ -193,7 +150,6 @@ public class GameManagerImpl implements GameManager {
             return null; // O maneja la excepción de otra manera apropiada
         }
     }
-
 
 
 
@@ -340,19 +296,6 @@ public class GameManagerImpl implements GameManager {
             }
         }
     }
-    /*@Override
-    public void addRanking(String nomUsuari, int puntuacio, Date data) {
-        Usuari usuari = new Usuari(nomUsuari, puntuacio);
-        Partida partida = new Partida();
-        ranking.add(usuari);
-    }
-    //Mètode per obtenir una llista de totes les preguntes
-    @Override
-    public List<Usuari> ranking() {
-        return new ArrayList<>(ranking);
-    }*/
-
-
 
 
     @Override

@@ -183,8 +183,6 @@ public class UsuarisService {
         return Response.status(201).entity(entity).build();
     }
 
-
-    //MÍNIM 2 - ANDREA ZAPATA
     @GET
     @ApiOperation(value = "Obtenir una llista de tots els FAQs", notes = "FAQs dels usuaris")
     @ApiResponses(value = {
@@ -193,11 +191,7 @@ public class UsuarisService {
     @Path("/llistaFaqs")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Faq> getFaqs() {
-        // Aquí simulamos la obtención de las FAQs desde algún origen de datos
         List<Faq> faqs = this.um.llistaFaqs();
-        //faqs.add(new Faq("f1", "q1"));
-        //faqs.add(new Faq("f2", "q2"));
-        // Agrega más FAQs según sea necesario
         GenericEntity<List<Faq>> entity = new GenericEntity<List<Faq>>(faqs) {};
         return (List<Faq>) Response.status(201).entity(entity).build();
     }
@@ -212,7 +206,6 @@ public class UsuarisService {
     @Path("/addFAQs")
     @Produces(MediaType.APPLICATION_JSON)
     public Response addFAQ(Faq faq) throws MissingDataException{
-        // Aquí simulamos la obtención de las FAQs desde algún origen de datos
         GameManager manager = GameManagerImpl.getInstance();
         try{
             manager.addFaq(faq);
@@ -221,11 +214,6 @@ public class UsuarisService {
             return Response.status(500).entity(faq).build();
         }
     }
-
-
-
-
-
 
     @POST
     @ApiOperation(value = "Comprar Item", notes = "comprar")

@@ -91,31 +91,6 @@ public class SessioImpl implements Sessio {
         }
     }
 
-    /*public Object get(Class theClass, int ID) {
-
-//        String sql = QueryHelper.createQuerySELECT(theClass);
-//
-//        Object o = theClass.newInstance();
-//
-//
-//        ResultSet res = null;
-//
-//        ResultSetMetaData rsmd = res.getMetaData();
-//
-//        int numColumns = rsmd.getColumnCount();
-//        int i=0;
-//
-//        while (i<numColumns) {
-//            String key = rsmd.getColumnName(i);
-//            String value = res.getObject(i);
-//
-//            ObjectHelper.setter(o, key, value);
-//
-//        }
-
-        return null;
-    }*/
-
     public void update(int saldo, String novaSkin, String nomUsuari) throws SQLException {
         String query = QueryHelper.createQueryUPDATE();
         PreparedStatement pstm = null;
@@ -166,26 +141,6 @@ public class SessioImpl implements Sessio {
         }
         return list;
     }
-
-
-    /*public List<Object> findAll(Class theClass, HashMap params) {
-        String theQuery = QueryHelper.createSelectFindAll(theClass, params);
-        PreparedStatement pstm = null;
-        pstm = conn.prepareStatement(theQuery);
-
-        int i=1;
-        for (Object value : params.values()) {
-            pstm.setObject(i++, value );
-        }
-        //ResultSet rs = pstm.executeQuery();
-
-
-
-
-        return result;
-
-     return null;
-    }*/
 
     public List<Object> query(String query, Class theClass, HashMap params) {
         return null;
