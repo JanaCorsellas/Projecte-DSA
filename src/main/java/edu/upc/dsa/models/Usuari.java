@@ -13,13 +13,13 @@ public class Usuari {
     int puntuacio;
 
     public Usuari(){}
-    public Usuari(String nom, String cognom, String nomusuari, String password, String password2) {
+    public Usuari(String nom, String cognom, String nomusuari, String password, String password2, int coins) {
         this.nom = nom;
         this.cognom = cognom;
         this.nomusuari = nomusuari;
         this.password = password;
         this.password2 = password2;
-        this.coins = 0;
+        this.coins = coins;
         this.clau = false;
         this.skin = "Verd";
         this.puntuacio = puntuacio;

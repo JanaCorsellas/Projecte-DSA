@@ -96,7 +96,7 @@ font-weight: bold; /* Utiliza la misma negrita que otros elementos */
             <p><strong>Nom: </strong><span id="nom"></span></p>
             <p><strong>Cognom: </strong><span id="cognom">-</span></p>
             <br>
-            <p><strong>Diners:</strong>0€</p>
+            <p><strong>Diners:</strong><span id="coins"></span></p>
         </div>
     </div>
 
@@ -110,13 +110,14 @@ font-weight: bold; /* Utiliza la misma negrita que otros elementos */
     var nomusuari = localStorage.getItem('nomusuari');
     var nom = localStorage.getItem('nom');
     var cognom = localStorage.getItem('cognom');
+    var coins = localStorage.getItem('coins');
 
     document.getElementById('nomusuari').textContent = nomusuari;
     document.getElementById('nom').textContent = nom;
-    document.getElementById('cognom').textContent = cognom;
+    document.getElementById('cognom').textContnt = cognom;
+    document.getElementById('coins').textContnt = coins;
 
-</script>
+    </script>
 
 </body>
 </html>
-

@@ -38,7 +38,7 @@ public class UsuarisService {
     @POST
     @ApiOperation(value = "Registrar un nou usuari", notes = "Afegirem un usuari nou")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Exitós", response= UsuariRegistre.class),
+            @ApiResponse(code = 201, message = "Exitós", response= Usuari.class),
             @ApiResponse(code = 409, message = "El nom d'usuari ja existeix"),
             @ApiResponse(code = 401, message = "La contrasenya no coincideix"),
             @ApiResponse(code = 404, message = "Falta completar algun camp"),
@@ -52,7 +52,7 @@ public class UsuarisService {
     public Response registreUsuari(Usuari usuari){
         try {
             GameManager manager = GameManagerImpl.getInstance();
-            manager.registreUsuari(usuari.getNom(), usuari.getCognom(), usuari.getNomusuari(), usuari.getPassword(), usuari.getPassword2());
+            manager.registreUsuari(usuari.getNom(), usuari.getCognom(), usuari.getNomusuari(), usuari.getPassword(), usuari.getPassword2(), usuari.getCoins());
             return Response.status(201).entity(usuari).build();
         } catch (UserAlreadyExistsException e) {
             return Response.status(409).entity(usuari).build();
@@ -130,6 +130,21 @@ public class UsuarisService {
         }
     }
 
+    @GET
+    @ApiOperation(value = "Obtenir perfil a partir del nomUsuari", notes = "Perfil del jugador")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Usuari.class),
+            @ApiResponse(code = 404, message = "Track not found")
+    })
+    @Path("/getPerfil/{nomusuari}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPerfil(@PathParam("nomusuari") String nomusuari) {
+        Usuari usuari = this.um.obtenirUsuariPerNomusuari(nomusuari);
+        if (usuari==null) return Response.status(404).build();
+        else return Response.status(201).entity(usuari).build();
+    }
+
+    //MÍNIM 2 - JANA CORSELLAS
     @POST
     @ApiOperation(value = "Enviar un nou formulari", notes = "Formulari per solicitar i enviar informació sobre un tema")
     @ApiResponses(value = {
@@ -153,6 +168,7 @@ public class UsuarisService {
             return Response.status(500).entity(formulari).build();
         }
     }
+
     @GET
     @ApiOperation(value = "Obtenir una llista de tots els formularis", notes = "Formularis dels usuaris")
     @ApiResponses(value = {
@@ -167,20 +183,8 @@ public class UsuarisService {
         return Response.status(201).entity(entity).build();
     }
 
-    @GET
-    @ApiOperation(value = "Obtenir perfil a partir del nomUsuari", notes = "Perfil del jugador")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful", response = Usuari.class),
-            @ApiResponse(code = 404, message = "Track not found")
-    })
-    @Path("/getPerfil/{nomusuari}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getPerfil(@PathParam("nomusuari") String nomusuari) {
-        Usuari usuari = this.um.obtenirUsuariPerNomusuari(nomusuari);
-        if (usuari==null) return Response.status(404).build();
-        else return Response.status(201).entity(usuari).build();
-    }
 
+    //MÍNIM 2 - ANDREA ZAPATA
     @GET
     @ApiOperation(value = "Obtenir una llista de tots els FAQs", notes = "FAQs dels usuaris")
     @ApiResponses(value = {
@@ -217,4 +221,36 @@ public class UsuarisService {
             return Response.status(500).entity(faq).build();
         }
     }
+
+
+
+
+
+
+    @POST
+    @ApiOperation(value = "Comprar Item", notes = "comprar")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Exitós", response = Usuari.class),
+            @ApiResponse(code = 500, message = "Error de validació"),
+            @ApiResponse(code = 404, message = "Diners Insuficients")
+
+    })
+    @Path("/ComprarItem/{nomusuari} {item}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response comprarItem(@PathParam("nomusuari") String nomusuari, @PathParam("item") String item) throws MissingDataException{
+
+        //GameManager manager = GameManagerImpl.getInstance();
+        try{
+            Usuari usuari = this.um.comprarItem(nomusuari, item);
+
+            if (usuari.getSkin() == item)
+                return Response.status(201).entity(usuari).build();
+            else
+                return Response.status(404).build();
+
+        } catch (Exception e) {
+            return Response.status(500).build();
+        }
+    }
+
 }

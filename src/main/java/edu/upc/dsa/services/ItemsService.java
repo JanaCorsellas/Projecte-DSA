@@ -5,6 +5,7 @@ import edu.upc.dsa.GameManagerImpl;
 import edu.upc.dsa.exception.ItemAlreadyExistsException;
 import edu.upc.dsa.exception.ItemNotFoundException;
 import edu.upc.dsa.exception.MissingDataException;
+import edu.upc.dsa.models.Formulari;
 import edu.upc.dsa.models.Item;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,15 +37,17 @@ public class ItemsService {
     @ApiOperation(value = "Obtenir una llista de tots els items", notes = "items de la botiga")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Item.class, responseContainer="List"),
+            @ApiResponse(code = 404, message = "Track not found")
     })
-    @Path("/llista")
+    @Path("/LlistaBotiga")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getItems() {
+    public Response getBotiga() {
 
-        List<Item> items = this.um.findAll();
+        List<Item> items = this.um.llistaItems();
         GenericEntity<List<Item>> entity = new GenericEntity<List<Item>>(items) {};
         return Response.status(201).entity(entity).build()  ;
     }
+
 
     @POST
     @ApiOperation(value = "Afegir un ítem a la botiga", notes = "Operació per afegir una skin a la botiga")

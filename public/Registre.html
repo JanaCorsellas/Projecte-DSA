@@ -104,13 +104,13 @@
 
             // Enviar los datos a través de AJAX
             $.ajax({
-                url: "/dsaApp/usuaris/registreUsuari",
+                url: "/dsaApp/usuarisDAO/registreUsuarisDAO",
                 method: "POST",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(datosUsuario),
                 dataType: "json",
                 success: function (data) {
-                    alert("Usuari registrat correctament");
+                    alert("Usuari registrat correctament.");
                     //var nom = data.nom
                     localStorage.setItem('nom', nom);
                     localStorage.setItem('cognom', cognom);

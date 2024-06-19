@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `Sala` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='taula que guarda la llista de sales';
 
 -- Dumping data for table scaperoom.sala: ~4 rows (approximately)
-INSERT INTO `Sala` (`id`, `numeroSala`, `estatPorta`) VALUES
+INSERT INTO `sala` (`id`, `numeroSala`, `estatPorta`) VALUES
 	('1', 1, NULL),
 	('2', 2, NULL),
 	('3', 3, NULL),
@@ -82,25 +82,32 @@ INSERT INTO `Sala` (`id`, `numeroSala`, `estatPorta`) VALUES
 -- Dumping structure for table scaperoom.usuari
 DROP TABLE IF EXISTS `usuari`;
 CREATE TABLE IF NOT EXISTS `Usuari` (
-  `id` varchar(50) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(50) DEFAULT NULL,
   `cognom` varchar(50) DEFAULT NULL,
   `nomusuari` varchar(50) DEFAULT NULL,
-  `password1` varchar(50) DEFAULT NULL,
+  `password` varchar(50) DEFAULT NULL,
   `password2` varchar(50) DEFAULT NULL,
   `coins` int(11) DEFAULT NULL,
   `clau` tinyint(4) DEFAULT NULL,
   `skin` varchar(50) DEFAULT NULL,
   `puntuacio` int(50) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='taula que guarda la llista d''usuaris registrats';
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nomusuari` (`nomusuari`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='taula que guarda la llista d''usuaris registrats';
 
--- Dumping data for table scaperoom.usuari: ~4 rows (approximately)
-INSERT INTO `Usuari` (`id`, `nom`, `cognom`, `nomusuari`, `password1`, `password2`, `coins`, `clau`, `skin`, `puntuacio`) VALUES
-	('1', 'Daniel', 'Perez', 'dperez', '111', '111', 0, NULL, 'verd', NULL),
-	('2', 'Carla', 'Otero', 'cotero', '222', '222', 0, NULL, 'verd', NULL),
-	('3', 'Andrea', 'Zapata', 'azapata', '333', '333', 0, NULL, 'verd', NULL),
-	('4', 'Jana', 'Corsellas', 'jcorsellas', '444', '444', 0, NULL, 'verd', NULL);
+-- Dumping data for table scaperoom.usuari: ~10 rows (approximately)
+INSERT INTO `Usuari` (`id`, `nom`, `cognom`, `nomusuari`, `password`, `password2`, `coins`, `clau`, `skin`, `puntuacio`) VALUES
+	(1, 'Daniel', 'Perez', 'dperez', '111', '111', 0, 0, 'verd', 0),
+	(2, 'Carla', 'Otero', 'cotero', '222', '222', 0, 0, 'verd', 0),
+	(3, 'Andrea', 'Zapata', 'azapata', '333', '333', 0, 0, 'verd', 0),
+	(4, 'Jana', 'Corsellas', 'jcorsellas', '444', '444', 0, 0, 'verd', 0),
+	(5, 'Jan', 'Paul', 'jp', '22', '22', 0, 0, 'Verd', 0),
+	(6, 'Marina', 'Mallol', 'mmallol', '33', '33', 0, 0, 'Verd', 0),
+	(10, 'Marina', 'M', 'mm', '11', '11', 0, 0, 'Verd', 0),
+	(11, 'j', 'j', 'jj', '1', '1', 0, 0, 'Verd', 0),
+	(14, 'Juan', 'Antonio', 'jantonio', 'ja', 'ja', 0, 0, 'Verd', 0),
+	(15, 'Pepe', 'Garcia', 'pp', '123', '123', 0, 0, 'Verd', 0);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

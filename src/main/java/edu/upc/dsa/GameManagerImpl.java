@@ -11,7 +11,10 @@ import edu.upc.dsa.models.Usuari;
 import edu.upc.dsa.models.Faq;
 import edu.upc.dsa.models.*;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import org.apache.log4j.Logger;
 
@@ -29,10 +32,18 @@ public class GameManagerImpl implements GameManager {
     private GameManagerImpl() {
         this.usuaris = new LinkedList<>();
         this.items = new LinkedList<>();
+        initializeItems();
         this.formularis = new LinkedList<>();
         this.issues = new LinkedList<>();
         this.faqs = new LinkedList<>();
         this.ranking = new LinkedList<>();
+    }
+
+    private void initializeItems() {
+        items.add(new Item("Vermell", 1, "Guanyes una vida", "https://i.pinimg.com/originals/2e/52/ab/2e52ab40fa59208c7f2d9c87f4a0227a.png"));
+        items.add(new Item("Verd", 2, "Tens més temps", "https://i.pinimg.com/originals/31/65/df/3165dfaa0fac0ca61802f9cdc1aef4d0.png"));
+        items.add(new Item("Groc", 3, "Obtens una pista", "https://s.namemc.com/3d/skin/body.png?id=6e52bc59debf0ea9&model=classic&width=308&height=308"));
+        items.add(new Item("Blau", 4, "Recompensa", "https://s.namemc.com/3d/skin/body.png?id=9489e7e4724918e8&model=slim&width=308&height=308"));
     }
 
     public static GameManager getInstance() {
@@ -47,177 +58,121 @@ public class GameManagerImpl implements GameManager {
         return ret;
     }
 
-    @Override
-    public Usuari obtenirUsuariPerNomusuari(String nomUsuari) {
-        /*for (Usuari usuari : usuaris) {
-            if (usuari.getNomusuari().equals(nomUsuari)) {
-                return usuari;
-            }
-        }
-        return null;*/
-        String query = "SELECT * FROM Usuari WHERE nomusuari = ?";
-        try (Connection conn = DBUtils.getConnection();
-             PreparedStatement pstm = conn.prepareStatement(query)) {
 
-            pstm.setString(1, nomUsuari);
-
-            try (ResultSet rs = pstm.executeQuery()) {
-                if (rs.next()) {
-                    return new Usuari(
-                            rs.getString("id"),
-                            rs.getString("nom"),
-                            rs.getString("cognom"),
-                            rs.getString("nomusuari"),
-                            rs.getString("password")
-                    );
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public List<Item> llistaItems() {
+        return this.items;
     }
 
-    @Override
-    public List<Item> findAll() {
-        List<Item> items = new ArrayList<>();
-        String query = "SELECT * FROM Item";
-        try (Connection conn = DBUtils.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-
-            while (rs.next()) {
-                items.add(new Item(
-                        rs.getString("color"),
-                        rs.getInt("preu"),
-                        rs.getString("descripcio"),
-                        rs.getString("imatge")
-                ));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return items;
-    }
 
     //Mètode per registrar un usuari
     @Override
-    public void registreUsuari(String nom, String cognom, String nomusuari, String password, String password2) throws UserAlreadyExistsException, IncorrectPasswordException, MissingDataException, SQLException {
-        if (nom.isEmpty() || cognom.isEmpty() || nomusuari.isEmpty() || password.isEmpty() || password2.isEmpty()) {
-            throw new MissingDataException("Falten camps per completar");
-        } else if (!password.equals(password2)) {
-            throw new IncorrectPasswordException("La contrasenya no coincideix");
-        } else {
-            String query = "INSERT INTO Usuari (nom, cognom, nomusuari, password, password2, coins, clau, skin, puntuacio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            try (Connection conn = DBUtils.getConnection();
-                 PreparedStatement pstm = conn.prepareStatement(query)) {
-
-                pstm.setString(1, nom);
-                pstm.setString(2, cognom);
-                pstm.setString(3, nomusuari);
-                pstm.setString(4, password);
-                pstm.setString(5, password2);
-                pstm.setInt(6, 0); // Inicializa coins a 0
-                pstm.setBoolean(7, false); // Inicializa clau a false
-                pstm.setString(8, "Verd"); // Inicializa skin a "Verd"
-                pstm.setInt(9, 0); // Inicializa puntuacio a 0
-
-                pstm.executeUpdate();
-                logger.info("Usuari registrat: " + nomusuari);
-            } catch (SQLIntegrityConstraintViolationException e) {
-                throw new UserAlreadyExistsException("Aquest nom d'usuari ja existeix.");
+    public void registreUsuari(String nom, String cognom, String nomusuari, String password, String password2, int coins) throws UserAlreadyExistsException, IncorrectPasswordException, MissingDataException, SQLException {
+        for (Usuari usuari : usuaris) {
+            if (usuari.getNomusuari().equals(nomusuari)) {
+                throw new UserAlreadyExistsException("Aquest nom d'usuari ja existeix: " + nomusuari);
             }
         }
+        if (nom.equals("") || cognom.equals("") || nomusuari.equals("") || password.equals("") || password2.equals("")) {
+            throw new MissingDataException("Falten camps per completar");
+        } else if (!Objects.equals(password, password2)) {
+            throw new IncorrectPasswordException("La contrasenya no coincideix");
+        } else {
+            //Si el nombre de usuario no está en uso, registra el usuario
+            Usuari usuari = new Usuari(nom, cognom, nomusuari, password, password2, coins);
+            usuari.setCoins(20);
+            this.usuaris.add(usuari);
+
+            /*try {
+                Connection conn = DBUtils.getConnection();
+                Sessio session = new SessioImpl(conn);
+                session.save(usuari); // INSERT INTO usuari (idXXX, pepito, ...)
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (nom.equals("") || cognom.equals("") || nomusuari.equals("") || password.equals("") || password2.equals("")) {
+                throw new MissingDataException("Falten camps per completar");
+            }*/
+
+//        if (password.equals(password2)) {
+//            // Las contraseñas coinciden, procedemos con la inserción en la base de datos
+//            try {
+//                Connection conn = DBUtils.getConnection();
+//                Sessio session = new SessioImpl(conn);
+//                session.save(usuari); // INSERT INTO usuari (idXXX, pepito, ...)
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            // Las contraseñas no coinciden, manejar el error
+//            throw new IncorrectPasswordException("La contrasenya no coincideix");
+//        }
+        }
+
     }
 
     //Mètode per iniciar sessió buscant l'usuari a la bbdd, en cas que no estigui registrat avisa
     @Override
-    public void login(String nomusuari, String password) throws UserNotFoundException, IncorrectPasswordException, MissingDataException, SQLException {
+    public void login(String nomusuari, String password) throws UserNotFoundException, IncorrectPasswordException, MissingDataException {
         // Lógica para buscar el usuario en tu sistema
         // Si el usuario no se encuentra, lanza la excepción
-        if (nomusuari.isEmpty() || password.isEmpty()) {
-            throw new MissingDataException("Completa tots els camps");
+        if (!usuariExisteix(nomusuari)) {
+            throw new UserNotFoundException("L'usuari no existeix" + nomusuari);
         }
-
-        String query = "SELECT * FROM Usuari WHERE nomusuari = ?";
-        //Usuari usuari;
-        try (Connection conn = DBUtils.getConnection();
-             PreparedStatement pstm = conn.prepareStatement(query)) {
-
-            pstm.setString(1, nomusuari);
-
-            try (ResultSet rs = pstm.executeQuery()) {
-                if (rs.next()) {
-                    Usuari usuari = new Usuari(
-                            rs.getString("id"),
-                            rs.getString("nom"),
-                            rs.getString("cognom"),
-                            rs.getString("nomusuari"),
-                            rs.getString("password")
-                    );
-
-                    if (!usuari.getPassword().equals(password)) {
-                        throw new IncorrectPasswordException("Usuari o contrasenya equivocada");
-                    } else {
-                        logger.info("Has iniciat sessió");
+        if (!contrasenyaCorrecte(nomusuari, password)) {
+            throw new IncorrectPasswordException("Contrasenya incorrecte");
+        }
+        if (nomusuari.equals("") || password.equals("")) {
+            throw new MissingDataException("Completa tots els camps");
+        } else {
+            //
+            /*Connection conn = null;
+                try {
+                    conn = DBUtils.getConnection();
+                    Sessio session = new SessioImpl(conn);
+                    Usuari e = (Usuari) session.get(Usuari.class, getUserId(nomusuari, password));
+                    System.out.println("id:" + getUserId(nomusuari, password));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (conn != null) {
+                            conn.close();
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
-                } else {
-                    throw new UserNotFoundException("L'usuari no existeix");
-                }
-            }
-        }catch (SQLException e) {
-            e.printStackTrace();
+                }*/
+            logger.info("Has iniciat sessió");
         }
     }
 
     @Override
     public List<Usuari> llistaUsuaris() {
-        List<Usuari> usuaris = new ArrayList<>();
-        String query = "SELECT * FROM Usuari";
-        try (Connection conn = DBUtils.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-
-            while (rs.next()) {
-                usuaris.add(new Usuari(
-                        rs.getString("id"),
-                        rs.getString("nom"),
-                        rs.getString("cognom"),
-                        rs.getString("nomusuari"),
-                        rs.getString("password")
-                ));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return usuaris;
+        return new ArrayList<>(usuaris);
     }
-
 
     //Mètode per verificar si un usuari existeix buscant a la llista d'usuaris
     @Override
     public boolean usuariExisteix(String nomUsuari) {
-        /*for (Usuari usuari : usuaris) {
+        for (Usuari usuari : usuaris) {
             if (usuari.getNomusuari().equals(nomUsuari)) {
                 return true;
             }
         }
-        return false;*/
-        return obtenirUsuariPerNomusuari(nomUsuari) != null;
+        return false;
     }
     //Mètode per comprovar que la contrasenya proporcionada per l'usuari és la correcte, comparant-la amb la que tenim a la bbdd
     public boolean contrasenyaCorrecte(String nomusuari, String password) {
         Usuari usuari = obtenirUsuariPerNomusuari(nomusuari);
 
-        /*if (usuari == null) {
+        if (usuari == null) {
             return false;
         }
-        return usuari.getPassword().equals(password);*/
-        return usuari != null && usuari.getPassword().equals(password);
+        return usuari.getPassword().equals(password);
     }
 
     public Integer getUserId(String username, String password) {
-        String query = "SELECT id FROM Usuari WHERE nomusuari = ? AND password = ?";
+        String query = "SELECT id FROM usuari WHERE nomusuari = ? AND password = ?";
 
         try (Connection conn = DBUtils.getConnection();
              PreparedStatement pstm = conn.prepareStatement(query)) {
@@ -229,7 +184,7 @@ public class GameManagerImpl implements GameManager {
                 if (rs.next()) {
                     return rs.getInt("id");
                 } else {
-                    throw new IllegalArgumentException("Usuari o contrasenya incorrectes");
+                    throw new IllegalArgumentException("Usuario o contraseña incorrectos");
                 }
             }
 
@@ -240,16 +195,7 @@ public class GameManagerImpl implements GameManager {
     }
 
 
-    //Mètode per obtenir un ítem per color
-    @Override
-    public Item obtenirItemPerColor(String color) {
-        for (Item producte : items) {
-            if (producte.getColor().equals(producte)) {
-                return producte;
-            }
-        }
-        return null;
-    }
+
 
     //Mètode per donar de baixa/eliminar un usuari
     @Override
@@ -259,29 +205,34 @@ public class GameManagerImpl implements GameManager {
             logger.warn("No s'ha trobat l'usuari " + nomusuari);
             throw new UserNotFoundException("L'usuari no existeix: " + nomusuari);
         } else {
-            String query = "DELETE FROM Usuari WHERE nomusuari = ?";
-            try (Connection conn = DBUtils.getConnection();
-                 PreparedStatement pstm = conn.prepareStatement(query)) {
+            // Lógica adicional para la baja, como registrar en un log de auditoría
+            logger.info("Donant de baixa l'usuari " + nomusuari);
 
-                pstm.setString(1, nomusuari);
-                int affectedRows = pstm.executeUpdate();
-
-                if (affectedRows == 0) {
-                    throw new SQLException("No s'ha pogut eliminar l'usuari de la base de dades.");
-                } else {
-                    logger.info("Usuari " + nomusuari + " donat de baixa amb èxit.");
+            // Eliminar de la base de datos, si es necesario
+            try (Connection conn = DBUtils.getConnection()) {
+                String query = "DELETE FROM usuari WHERE nomusuari = ?";
+                try (PreparedStatement pstm = conn.prepareStatement(query)) {
+                    pstm.setString(1, nomusuari);
+                    int affectedRows = pstm.executeUpdate();
+                    if (affectedRows == 0) {
+                        throw new SQLException("No s'ha pogut eliminar l'usuari de la base de dades.");
+                    }
                 }
             } catch (SQLException e) {
                 logger.error("Error en eliminar l'usuari de la base de dades", e);
                 throw e;
             }
+
+            // Eliminar de la llista local
+            this.usuaris.remove(usuari);
+            logger.info("Usuari " + nomusuari + " donat de baixa amb èxit.");
         }
     }
 
     //Mètode per afegir un ítem a la botiga
     @Override
     public void addItem(String color, int preu, String descripcio, String imatge) throws MissingDataException, ItemAlreadyExistsException {
-        /*for (Item item : items) {
+        for (Item item : items) {
             if (item.getColor().equals(color)) {
                 throw new ItemAlreadyExistsException("Aquesta skin ja existeix: " + color);
             }
@@ -293,26 +244,6 @@ public class GameManagerImpl implements GameManager {
             // Si el nombre de usuario no está en uso, registra el usuario
             Item item = new Item(color, preu, descripcio, imatge);
             this.items.add(item);
-        }*/
-        if (color.isEmpty() || preu < 0 || descripcio.isEmpty() || imatge.isEmpty()) {
-            throw new MissingDataException("Falten camps per completar");
-        } else {
-            String query = "INSERT INTO Item (color, preu, descripcio, imatge) VALUES (?, ?, ?, ?)";
-            try (Connection conn = DBUtils.getConnection();
-                 PreparedStatement pstm = conn.prepareStatement(query)) {
-
-                pstm.setString(1, color);
-                pstm.setInt(2, preu);
-                pstm.setString(3, descripcio);
-                pstm.setString(4, imatge);
-
-                pstm.executeUpdate();
-                logger.info("Item afegit: " + color);
-            } catch (SQLIntegrityConstraintViolationException e) {
-                throw new ItemAlreadyExistsException("Aquesta skin ja existeix: " + color);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -420,6 +351,56 @@ public class GameManagerImpl implements GameManager {
     public List<Usuari> ranking() {
         return new ArrayList<>(ranking);
     }*/
+
+
+
+
+    @Override
+    public Usuari obtenirUsuariPerNomusuari(String nomUsuari) {
+        for (Usuari usuari : usuaris) {
+            if (usuari.getNomusuari().equals(nomUsuari)) {
+                return usuari;
+            }
+        }
+        return null;
+    }
+    //Mètode per obtenir un ítem per color
+    @Override
+    public Item obtenirItemPerColor(String color) {
+        for (Item item : items) {
+            if (item.getColor().equals(color)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public boolean dinersSuficient(String nomUsuari, String itemColor){
+        Usuari usuari = obtenirUsuariPerNomusuari(nomUsuari);
+        Item item = obtenirItemPerColor(itemColor);
+        if (usuari.getCoins() >= item.getPreu()){
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public Usuari comprarItem(String nomUsuari, String item) throws MissingDataException {
+        Usuari usuari = obtenirUsuariPerNomusuari(nomUsuari);
+        if(dinersSuficient(nomUsuari, item) == true){
+            usuari.setSkin(item);
+
+            //RESTAR ELS DINERS DE L'ITEM COMPRAT A L'USUARI
+            Item i = obtenirItemPerColor(item);
+            int diners = usuari.getCoins();
+            diners = diners - i.getPreu();
+            usuari.setCoins(diners);
+
+            return usuari;
+        }
+        else
+            throw new MissingDataException("Falten diners per poder comprar l'Item");
+    }
 }
 
 

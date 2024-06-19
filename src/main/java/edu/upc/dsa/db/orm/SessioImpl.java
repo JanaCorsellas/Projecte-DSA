@@ -1,11 +1,12 @@
 package edu.upc.dsa.db.orm;
 
+import edu.upc.dsa.models.Usuari;
 import edu.upc.dsa.util.ObjectHelper;
 import edu.upc.dsa.util.QueryHelper;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import java.sql.Connection;
@@ -20,8 +21,9 @@ public class SessioImpl implements Sessio {
         this.conn = conn;
     }
 
+
     @Override
-    public void save(Object entity) throws SQLIntegrityConstraintViolationException {
+    public void save(Object entity){
         if (conn == null) {
             throw new IllegalStateException("Connection is not initialized.");
         }
@@ -35,9 +37,8 @@ public class SessioImpl implements Sessio {
                     pstm.setObject(i++, ObjectHelper.getter(entity, field));
                 }
             }
+
             pstm.executeUpdate();
-        } catch (SQLIntegrityConstraintViolationException e) {
-            throw e; // Rethrow to indicate constraint violation
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -46,207 +47,131 @@ public class SessioImpl implements Sessio {
 
     public void close() {
         try {
-            if (conn != null && !conn.isClosed()) {
-                conn.close();
-            }
+            this.conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-
     @Override
-    public Object get(Class theClass, Object ID) throws SQLException {
-        if (conn == null) {
-            throw new IllegalStateException("Connection is not initialized.");
-        }
+    public Object get(Class theClass, String columna, String value) throws SQLException {
+        String selectQuery  = QueryHelper.createQuerySELECT(theClass, columna, value);
+        ResultSet rs;
+        PreparedStatement pstm = null;
 
-        String selectQuery = QueryHelper.createQuerySELECT(theClass);
-        try (PreparedStatement pstm = conn.prepareStatement(selectQuery)) {
-            pstm.setObject(1, ID);
-            try (ResultSet rs = pstm.executeQuery()) {
-                if (rs.next()) {
-                    Object instance = theClass.getDeclaredConstructor().newInstance();
-                    ResultSetMetaData metaData = rs.getMetaData();
-                    int columnCount = metaData.getColumnCount();
-                    for (int i = 1; i <= columnCount; i++) {
-                        String columnName = metaData.getColumnName(i);
-                        Object columnValue = rs.getObject(i);
-                        ObjectHelper.setter(instance, columnName, columnValue);
+        try {
+            pstm = conn.prepareStatement(selectQuery);
+            pstm.setObject(1, value); //son los ?
+            rs = pstm.executeQuery();
+            Object o = theClass.newInstance();
+
+            if (!rs.next()) {
+                // No records found
+                o = null;
+            } else{
+                ResultSetMetaData rsmd = rs.getMetaData();
+                int numberOfColumns = rsmd.getColumnCount();
+
+                do {
+                    for (int i = 1; i <= numberOfColumns; i++) {
+                        String columnName = rsmd.getColumnName(i);
+                        ObjectHelper.setter(o, columnName, rs.getObject(i));
                     }
-                    return instance;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+                } while (rs.next());
             }
+
+            return o;
+
+        } catch (SQLException e) {
+            throw new SQLException();
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    /*public Object get(Class theClass, int ID) {
+
+//        String sql = QueryHelper.createQuerySELECT(theClass);
+//
+//        Object o = theClass.newInstance();
+//
+//
+//        ResultSet res = null;
+//
+//        ResultSetMetaData rsmd = res.getMetaData();
+//
+//        int numColumns = rsmd.getColumnCount();
+//        int i=0;
+//
+//        while (i<numColumns) {
+//            String key = rsmd.getColumnName(i);
+//            String value = res.getObject(i);
+//
+//            ObjectHelper.setter(o, key, value);
+//
+//        }
+
         return null;
+    }*/
+
+    public void update(Object object) {
+
     }
 
-    @Override
-    public void update(Object entity) {
-        if (conn == null) {
-            throw new IllegalStateException("Connection is not initialized.");
-        }
+    public void delete(Object object) {
 
-        // Implementación de la consulta UPDATE
-        StringBuilder query = new StringBuilder("UPDATE ");
-        query.append(entity.getClass().getSimpleName().toLowerCase()).append(" SET ");
-
-        String[] fields = ObjectHelper.getFields(entity);
-        for (String field : fields) {
-            if (!field.equalsIgnoreCase("id")) {
-                query.append(field).append(" = ?, ");
-            }
-        }
-        query.delete(query.length() - 2, query.length()); // Eliminar la última coma y espacio
-        query.append(" WHERE id = ?");
-
-        try (PreparedStatement pstm = conn.prepareStatement(query.toString())) {
-            int i = 1;
-            for (String field : fields) {
-                if (!field.equalsIgnoreCase("id")) {
-                    pstm.setObject(i++, ObjectHelper.getter(entity, field));
-                }
-            }
-            pstm.setObject(i, ObjectHelper.getter(entity, "id"));
-            pstm.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
-    @Override
-    public void delete(Object entity) {
-        if (conn == null) {
-            throw new IllegalStateException("Connection is not initialized.");
-        }
-
-        String deleteQuery = QueryHelper.createQueryDELETE(entity.getClass(), "id", ObjectHelper.getter(entity, "id").toString());
-
-        try (PreparedStatement pstm = conn.prepareStatement(deleteQuery)) {
-            pstm.setObject(1, ObjectHelper.getter(entity, "id"));
-            pstm.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public List<Object> findAll(Class theClass) {
-        if (conn == null) {
-            throw new IllegalStateException("Connection is not initialized.");
-        }
-
+    public <T> List<T> findAll(Class theClass) {
         String query = QueryHelper.createQuerySELECTall(theClass);
-        List<Object> results = new ArrayList<>();
+        PreparedStatement pstm =null;
+        ResultSet rs;
+        List<T> list = new LinkedList<>();
+        try {
+            pstm = conn.prepareStatement(query);
+            pstm.executeQuery();
+            rs = pstm.getResultSet();
 
-        try (PreparedStatement pstm = conn.prepareStatement(query);
-             ResultSet rs = pstm.executeQuery()) {
-            ResultSetMetaData metaData = rs.getMetaData();
-            int columnCount = metaData.getColumnCount();
+            ResultSetMetaData metadata = rs.getMetaData();
+            int numberOfColumns = metadata.getColumnCount();
 
-            while (rs.next()) {
-                Object instance = theClass.getDeclaredConstructor().newInstance();
-                for (int i = 1; i <= columnCount; i++) {
-                    String columnName = metaData.getColumnName(i);
-                    Object columnValue = rs.getObject(i);
-                    ObjectHelper.setter(instance, columnName, columnValue);
+            while (rs.next()){
+                T o = (T) theClass.newInstance();
+                for (int j=1; j<=numberOfColumns; j++){
+                    String columnName = metadata.getColumnName(j);
+                    ObjectHelper.setter(o, columnName, rs.getObject(j));
                 }
-                results.add(instance);
+                list.add(o);
             }
-        } catch (Exception e) {
+        } catch (SQLException | InstantiationException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }
-        return results;
-    }
-    @Override
-    public List<Object> findAll(Class theClass, HashMap params) {
-        if (conn == null) {
-            throw new IllegalStateException("Connection is not initialized.");
-        }
-
-        String query = QueryHelper.createSelectFindAll(theClass, params);
-        List<Object> results = new ArrayList<>();
-
-        try (PreparedStatement pstm = conn.prepareStatement(query)) {
-            int i = 1;
-            for (Object value : params.values()) {
-                pstm.setObject(i++, value);
-            }
-
-            try (ResultSet rs = pstm.executeQuery()) {
-                ResultSetMetaData metaData = rs.getMetaData();
-                int columnCount = metaData.getColumnCount();
-
-                while (rs.next()) {
-                    Object instance = theClass.getDeclaredConstructor().newInstance();
-                    for (int j = 1; j <= columnCount; j++) {
-                        String columnName = metaData.getColumnName(j);
-                        Object columnValue = rs.getObject(j);
-                        ObjectHelper.setter(instance, columnName, columnValue);
-                    }
-                    results.add(instance);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return results;
+        return list;
     }
 
-    @Override
+
+    /*public List<Object> findAll(Class theClass, HashMap params) {
+        String theQuery = QueryHelper.createSelectFindAll(theClass, params);
+        PreparedStatement pstm = null;
+        pstm = conn.prepareStatement(theQuery);
+
+        int i=1;
+        for (Object value : params.values()) {
+            pstm.setObject(i++, value );
+        }
+        //ResultSet rs = pstm.executeQuery();
+
+
+
+
+        return result;
+
+     return null;
+    }*/
+
     public List<Object> query(String query, Class theClass, HashMap params) {
-        if (conn == null) {
-            throw new IllegalStateException("Connection is not initialized.");
-        }
-
-        List<Object> results = new ArrayList<>();
-
-        try (PreparedStatement pstm = conn.prepareStatement(query)) {
-            int i = 1;
-            for (Object value : params.values()) {
-                pstm.setObject(i++, value);
-            }
-
-            try (ResultSet rs = pstm.executeQuery()) {
-                ResultSetMetaData metaData = rs.getMetaData();
-                int columnCount = metaData.getColumnCount();
-
-                while (rs.next()) {
-                    Object instance = theClass.getDeclaredConstructor().newInstance();
-                    for (int j = 1; j <= columnCount; j++) {
-                        String columnName = metaData.getColumnName(j);
-                        Object columnValue = rs.getObject(j);
-                        ObjectHelper.setter(instance, columnName, columnValue);
-                    }
-                    results.add(instance);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return results;
-    }
-
-    @Override
-    public int size(Class theClass) {
-        if (conn == null) {
-            throw new IllegalStateException("Connection is not initialized.");
-        }
-
-        String query = QueryHelper.createQuerySELECTall(theClass);
-        int numberOfRows = 0;
-
-        try (PreparedStatement pstm = conn.prepareStatement(query);
-             ResultSet rs = pstm.executeQuery()) {
-            while (rs.next()) {
-                numberOfRows++;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return numberOfRows;
+        return null;
     }
 }

@@ -20,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
+//MÍNIM 2 - CARLA OTERO
 @Api(value = "/issues", description = "Les denuncies")
 @Path("/issues")
 public class IssueService {
@@ -60,4 +61,5 @@ public class IssueService {
         GenericEntity<List<Issue>> entity = new GenericEntity<List<Issue>>(issues) {};
         return Response.status(201).entity(entity).build()  ;
     }
+
 }
